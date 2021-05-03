@@ -53,3 +53,55 @@ form {
 } 
 
 
+/* 
+#####################################
+####          MAP-STYLES          ###
+#####################################
+*/
+
+#map {
+    width: 600px; 
+    height: 370px;
+}
+
+#contacts {
+    border-collapse: collapse;
+  }
+
+  #contacts td, #contacts th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  #contacts tr:nth-child(even){background-color: #f2f2f2;}
+  
+  #contacts tr:nth-child(odd){background-color: #ffffff;}
+  
+  #contacts tr:hover {background-color: #ddd;}
+  
+  #contacts th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4c63af;
+    color: white;
+  }
+  
+  #map-container {
+    /*Center Map*/
+    display: inline-block;
+  }
+  
+  #map-contacts {
+    /*Put contacts on the left side of map*/
+    display: flex;
+  }
+  
+  #action-buttons {
+    /*Put contacts on the left side of map*/
+    display: flex;
+  }
+  
+  #action-buttons input {
+    margin: 10px;
+  }

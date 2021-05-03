@@ -8,6 +8,8 @@
     <meta name="author" content="Minh Anh Vu">
 
     <link rel="stylesheet" href="css/stylesheet.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
 </head>
 
@@ -37,7 +39,31 @@
 
             <div class="map-container" id="map-container">
                 <h3>Map</h3>
-
+                <div class="action-buttons" id="action-buttons">
+                    <input type="button" value="Show all contacts">
+                    <input type="button" value="Show my contacts">
+                    <input type="button" value="Add new contact">
+                </div>
+                <div class="map-contacts" id="map-contacts">
+                    <div id="contacts-wrapper">
+                        <table id="contacts">
+                            <tr>
+                                <th>Kontakte</th>
+                            </tr>
+                            <tr>
+                                <td>Ralf Klaasen</td>
+                            </tr>
+                            <tr>
+                                <td>Susanne Ull</td>
+                            </tr>
+                            <tr>
+                                <td>Thomas Wagner</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="map" id="map"></div>
+                </div>
+                <input type="button" value="Logout">
             </div>
 
             <div class="add" id="add">
@@ -129,6 +155,30 @@
         <!-- <div class="rightside"></div> -->
 
     </div>
+
+    <script>
+        var mapOptions = {
+            center: [52.520008, 13.404954],
+            zoom: 12
+        }
+
+        var map = new L.map('map', mapOptions);
+
+        var layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+
+        map.addLayer(layer);
+
+
+        var marker1 = L.marker([52.462712, 13.377397]).addTo(map);
+        marker1.bindPopup("<b>Thomas Wagner</b><br>Platz des Platzes 31").openPopup();
+
+        var marker2 = L.marker([52.508098, 13.320362]).addTo(map);
+        marker2.bindPopup("<b>Susanne Ull</b><br>An der Alle 111").openPopup();
+
+        var marker3 = L.marker([52.520008, 13.404954]).addTo(map);
+        marker3.bindPopup("<b>Ralf Klaasen</b><br>Fakestr. 123").openPopup();
+    </script>
+
 </body>
 
 </html>
