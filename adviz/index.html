@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>AdViz</title>
+    <meta name="description" content="AdViz Beleg">
+    <meta name="author" content="Minh Anh Vu">
+
+    <link rel="stylesheet" href="css/styles.css">
+
+</head>
+
+<body>
+    <div class="grid-container">
+        <div class="header">
+            <h1 class="headline" id="headline">AdViz</h1>
+            <p id="welcome"></p>
+        </div>
+        <div class="main">
+            <div class="login" id="login">
+                <h3>Login</h3>
+                <br>
+                <form action="Login">
+                    <label for="username">Username: </label>
+                    <input type="text" name="username" id="username" placeholder="Enter username" required>
+                    <br><br>
+                    <label for="password">Password: </label>
+                    <input type="password" name="password" id="password" placeholder="Enter password" required>
+                    <br><br>
+                    <input type="button" value="Login" onclick="login();">
+                </form>
+            </div>
+
+            <div class="map-container" id="map-container">
+                <h3>Map</h3>
+
+            </div>
+
+            <div class="add" id="add">
+                <h3>Add new Address</h3>
+                <br>
+                <form action="Add">
+                    <label for="firstname">* Vorname</label>
+                    <input type="text" name="firstname" id="firstname" required>
+                    <br><br>
+                    <label for="lastname">* Nachname: </label>
+                    <input type="text" name="lastname" id="lastname" required>
+                    <br><br>
+                    <label for="street">* Straße: </label>
+                    <input type="text" name="street" id="street" placeholder="Musterstraße" required>
+                    <br><br>
+                    <label for="housenumber">* Hausnummer: </label>
+                    <input type="text" name="housenumber" id="housenumber" placeholder="007" required>
+                    <br><br>
+                    <label for="PLZ">* PLZ: </label>
+                    <input type="text" name="PLZ" id="PLZ" placeholder="12345" required>
+                    <br><br>
+                    <label for="city">* Stadt: </label>
+                    <input type="text" name="city" id="city" required>
+                    <br><br>
+                    <label for="fedState">Bundesland: </label>
+                    <input type="text" name="fedState" id="fedState">
+                    <br><br>
+                    <label for="country">Land: </label>
+                    <input type="text" name="country" id="country" placeholder="Deutschland">
+                    <br><br>
+                    <label for="isPrivate">* Privat: </label>
+                    <input type="checkbox" name="isPrivate" id="isPrivate" checked>
+                    <br><br>
+                    <select name="owner" id="owner">
+                        <option value="self" selected>self</option>
+                        <option value="normalo">normalo</option>
+                    </select>
+                    <br><br>
+                    <input type="button" value="Add">
+                </form>
+            </div>
+
+            <div class="update" id="update">
+                <h3>Update Address</h3>
+                <br>
+                <form action="Add">
+                    <label for="firstname">* Vorname</label>
+                    <input type="text" name="firstname" id="firstname" value="Bob" required>
+                    <br><br>
+                    <label for="lastname">* Nachname: </label>
+                    <input type="text" name="lastname" id="lastname" value="Brown" required>
+                    <br><br>
+                    <label for="street">* Straße: </label>
+                    <input type="text" name="street" id="street" placeholder="Musterstraße" value="Berliner Straße" required>
+                    <br><br>
+                    <label for="housenumber">* Hausnummer: </label>
+                    <input type="text" name="housenumber" id="housenumber" placeholder="007" value="22" required>
+                    <br><br>
+                    <label for="PLZ">* PLZ: </label>
+                    <input type="text" name="PLZ" id="PLZ" placeholder="12345"   value="10715" required>
+                    <br><br>
+                    <label for="city">* Stadt: </label>
+                    <input type="text" name="city" id="city" value="Berlin" required>
+                    <br><br>
+                    <label for="fedState">Bundesland: </label>
+                    <input type="text" name="fedState" id="fedState" value="Berlin">
+                    <br><br>
+                    <label for="country">Land: </label>
+                    <input type="text" name="country" id="country" placeholder="Deutschland" value="Deutschland">
+                    <br><br>
+                    <label for="isPrivate">* Privat: </label>
+                    <input type="checkbox" name="isPrivate" id="isPrivate" checked>
+                    <br><br>
+                    <select name="owner" id="owner">
+                        <option value="self">self</option>
+                        <option value="normalo" selected>normalo</option>
+                    </select>
+                    <br><br>
+                    <input type="button" value="Update">
+                    <input type="button" value="Delete">
+                </form>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>
