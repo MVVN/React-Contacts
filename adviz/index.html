@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="css/stylesheet.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-
 </head>
 
 <body>
@@ -33,16 +32,16 @@
                     <label for="password">Password: </label>
                     <input type="password" name="password" id="password" placeholder="Enter password" required>
                     <br><br>
-                    <input type="button" value="Login" onclick="login();">
+                    <input type="button" value="Login" id="loginBtn" onclick="login();">
                 </form>
             </div>
 
             <div class="map-container" id="map-container">
                 <h3>Map</h3>
                 <div class="action-buttons" id="action-buttons">
-                    <input type="button" value="Show all contacts">
-                    <input type="button" value="Show my contacts">
-                    <input type="button" value="Add new contact">
+                    <input type="button" value="Show all contacts" onclick="showAllContacts();">
+                    <input type="button" value="Show my contacts" onclick="showMyContacts();">
+                    <input type="button" value="Add new contact" onclick="addNewContact();">
                 </div>
                 <div class="map-contacts" id="map-contacts">
                     <div id="contacts-wrapper">
@@ -50,103 +49,86 @@
                             <tr>
                                 <th>Kontakte</th>
                             </tr>
-                            <tr>
-                                <td>Ralf Klaasen</td>
-                            </tr>
-                            <tr>
-                                <td>Susanne Ull</td>
-                            </tr>
-                            <tr>
-                                <td>Thomas Wagner</td>
-                            </tr>
                         </table>
                     </div>
                     <div class="map" id="map"></div>
                 </div>
-                <input type="button" value="Logout">
+                <input type="button" value="Logout" onclick="logout();">
             </div>
 
             <div class="add" id="add">
-                <h3>Add new Address</h3>
+                <h3>Add new Contact</h3>
                 <br>
                 <form action="Add">
                     <label for="firstname">* Vorname</label>
-                    <input type="text" name="firstname" id="firstname" required>
+                    <input type="text" name="firstname" id="addFirstname" required>
                     <br><br>
                     <label for="lastname">* Nachname: </label>
-                    <input type="text" name="lastname" id="lastname" required>
+                    <input type="text" name="lastname" id="addLastname" required>
                     <br><br>
                     <label for="street">* Straße: </label>
-                    <input type="text" name="street" id="street" placeholder="Musterstraße" required>
+                    <input type="text" name="street" id="addStreet" placeholder="Musterstraße" required>
                     <br><br>
                     <label for="housenumber">* Hausnummer: </label>
-                    <input type="text" name="housenumber" id="housenumber" placeholder="42" required>
+                    <input type="text" name="housenumber" id="addHousenumber" placeholder="42" required>
                     <br><br>
                     <label for="PLZ">* PLZ: </label>
-                    <input type="text" name="PLZ" id="PLZ" placeholder="12345" required>
+                    <input type="text" name="PLZ" id="addPLZ" placeholder="12345" required>
                     <br><br>
                     <label for="city">* Stadt: </label>
-                    <input type="text" name="city" id="city" required>
+                    <input type="text" name="city" id="addCity" required>
                     <br><br>
                     <label for="fedState">Bundesland: </label>
-                    <input type="text" name="fedState" id="fedState">
+                    <input type="text" name="fedState" id="addFedState">
                     <br><br>
                     <label for="country">Land: </label>
-                    <input type="text" name="country" id="country" placeholder="Deutschland">
+                    <input type="text" name="country" id="addCountry" placeholder="Deutschland">
                     <br><br>
                     <label for="isPrivate">* Privat: </label>
-                    <input type="checkbox" name="isPrivate" id="isPrivate" checked>
+                    <input type="checkbox" name="isPrivate" id="addIsPrivate" checked>
                     <br><br>
                     <label for="owner">* Owner: </label>
                     <select name="owner" id="owner">
-                        <option value="self" selected>self</option>
-                        <option value="normalo">normalo</option>
+                        <!-- <option id="optionId"></option> -->
                     </select>
                     <br><br>
-                    <input type="button" value="Add">
+                    <input type="button" id="addBtn" value="Add">
                 </form>
             </div>
 
             <div class="update" id="update">
-                <h3>Update Address</h3>
+                <h3>Update Contact</h3>
                 <br>
-                <form action="Add">
+                <form action="Update">
                     <label for="firstname">* Vorname</label>
-                    <input type="text" name="firstname" id="firstname" value="Bob" required>
+                    <input type="text" name="firstname" id="upFirstname" required>
                     <br><br>
                     <label for="lastname">* Nachname: </label>
-                    <input type="text" name="lastname" id="lastname" value="Brown" required>
+                    <input type="text" name="lastname" id="upLastname" required>
                     <br><br>
                     <label for="street">* Straße: </label>
-                    <input type="text" name="street" id="street" placeholder="Musterstraße" value="Berliner Straße"
-                        required>
+                    <input type="text" name="street" id="upStreet" placeholder="Musterstraße" required>
                     <br><br>
                     <label for="housenumber">* Hausnummer: </label>
-                    <input type="text" name="housenumber" id="housenumber" placeholder="007" value="22" required>
+                    <input type="text" name="housenumber" id="upHousenumber" placeholder="007" required>
                     <br><br>
                     <label for="PLZ">* PLZ: </label>
-                    <input type="text" name="PLZ" id="PLZ" placeholder="12345" value="10715" required>
+                    <input type="text" name="PLZ" id="upPLZ" placeholder="12345" required>
                     <br><br>
                     <label for="city">* Stadt: </label>
-                    <input type="text" name="city" id="city" value="Berlin" required>
+                    <input type="text" name="city" id="upCity" required>
                     <br><br>
                     <label for="fedState">Bundesland: </label>
-                    <input type="text" name="fedState" id="fedState" value="Berlin">
+                    <input type="text" name="fedState" id="upFedState">
                     <br><br>
                     <label for="country">Land: </label>
-                    <input type="text" name="country" id="country" placeholder="Deutschland" value="Deutschland">
+                    <input type="text" name="country" id="upCountry" placeholder="Deutschland">
                     <br><br>
                     <label for="isPrivate">* Privat: </label>
-                    <input type="checkbox" name="isPrivate" id="isPrivate" checked>
+                    <input type="checkbox" name="isPrivate" id="upIsPrivate">
                     <br><br>
-                    <label for="owner">* Owner: </label>
-                    <select name="owner" id="owner">
-                        <option value="self">self</option>
-                        <option value="normalo" selected>normalo</option>
-                    </select>
-                    <br><br>
-                    <input type="button" value="Update">
-                    <input type="button" value="Delete">
+                    <input type="button" id="upBtn" value="Update">
+                    <input type="button" id="delBtn" value="Delete">
                 </form>
             </div>
 
@@ -156,27 +138,19 @@
 
     </div>
 
+    <script src="js/map.js"></script>
+    <script src="js/login.js"></script>
+    <script src="js/contacts.js"></script>
+
     <script>
-        var mapOptions = {
-            center: [52.520008, 13.404954],
-            zoom: 12
-        }
+        var elem = document.getElementById('map-container');
+        elem.style.display = 'none';
 
-        var map = new L.map('map', mapOptions);
+        var elem = document.getElementById('add');
+        elem.style.display = 'none';
 
-        var layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
-
-        map.addLayer(layer);
-
-
-        var marker1 = L.marker([52.462712, 13.377397]).addTo(map);
-        marker1.bindPopup("<b>Thomas Wagner</b><br>Platz des Platzes 31").openPopup();
-
-        var marker2 = L.marker([52.508098, 13.320362]).addTo(map);
-        marker2.bindPopup("<b>Susanne Ull</b><br>An der Alle 111").openPopup();
-
-        var marker3 = L.marker([52.520008, 13.404954]).addTo(map);
-        marker3.bindPopup("<b>Ralf Klaasen</b><br>Fakestr. 123").openPopup();
+        var elem = document.getElementById('update');
+        elem.style.display = 'none';
     </script>
 
 </body>
