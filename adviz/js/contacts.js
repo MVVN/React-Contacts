@@ -1,7 +1,7 @@
 
 // TODO: remove marker; 
-// TODO: Edit Contact1 & danach 2 --> beide Contacte == Contact2  ... --> hat mit var/let bei dem Edit Btn zu tun
-
+// TODO: Edit Contact1 & danach 2 --> beide Contacte == Contact2  ... 
+// TODO: --> hat mit var/let bei dem Edit Btn zu tun --> in fillTableWithData Methods
 
 function getUserDropdownText() {
     var elem = document.getElementById("owner");
@@ -220,8 +220,8 @@ function fillTableWithDataAdmin() {
     deleteTableContent("contacts")
     let tableElem = document.getElementById("contacts")
 
-    for (var userA of Object.keys(contacts)) {
-        for (cont of Object.keys(contacts[userA])) {
+    for (let userA of Object.keys(contacts)) {
+        for (let cont of Object.keys(contacts[userA])) {
             let tr = document.createElement('TR');
             let contactAsText = getContactShortWithContactObj(contacts[userA][cont]);
             tr.appendChild(document.createTextNode(contactAsText));
@@ -242,8 +242,8 @@ function fillTableWithDataNotAdmin() {
     deleteTableContent("contacts")
     let tableElem = document.getElementById("contacts")
 
-    for (var userA of Object.keys(contacts)) {
-        for (cont of Object.keys(contacts[userA])) {
+    for (let userA of Object.keys(contacts)) {
+        for (let cont of Object.keys(contacts[userA])) {
             if (contacts[userA][cont].isPrivate == true && userA != user) {
                 // don't add to table
             } else {
