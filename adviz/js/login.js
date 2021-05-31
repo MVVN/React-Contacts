@@ -223,8 +223,8 @@ function deleteGeoJsonAndSetMap(street, num, city, zip, name) {
             if (geoResult.length == 0) {
                 alert("Invalid address, please try again")
             } else {
-                console.log(geoResult)
-                jsonData = extractData(geoResult);
+                console.log("geoResult", geoResult);
+                jsonData = extractData(geoResult);                
                 deleteMapMarker(jsonData[0], jsonData[1], name, mapStreet)
             }
         }
@@ -249,7 +249,7 @@ function extractData(jsonData) {
 // using full name as key, see below
 var mapMarkerMap = new Map();
 
-function deleteMapMarker(fullName) {
+function deleteMapMarker(lat, lon, fullName, street) {
     map.removeLayer(mapMarkerMap.get(fullName));
 }
 
@@ -259,6 +259,7 @@ function setMapMarker(lat, lon, name, street) {
 }
 
 function setInitialMapMarkers() {
+    console.log("setInitialMapMarker");
     var contacts = getAllUserContacts(user)
 
     for (var i = 0; i < contacts.length; i++) {
