@@ -22,7 +22,7 @@ function processAdd() {
     let addCity = document.getElementById("addCity").value.trim();
     let addFedState = document.getElementById("addFedState").value.trim();
     let addCountry = document.getElementById("addCountry").value.trim();
-    let addIsPrivate = document.getElementById("addIsPrivate");
+    let addIsPrivate = document.getElementById("addIsPrivate").value;
 
     var userA = getUserDropdownText()
 
@@ -254,12 +254,25 @@ function processUpdate(contact, index) {
     upCountry.value = contact.country;
     upIsPrivate.value = contact.isPrivate;
 
+    // data to delete old map marker
+    let oldAdresse = contact.street;
+    let oldHausnummer = contact.housenumber;
+    let oldStadt = contact.city;
+    let oldPLZ = contact.PLZ;
+    var oldFullName = contact.firstname + " " + contact.lastname;
+
+    if (contact.isPrivate) {
+        upIsPrivate.checked = true;
+    } else {
+        upIsPrivate.checked = false;
+    }
+
     upBtn.addEventListener("click", function (event) {
         if (upLastname.value !== "" && upFirstname.value !== "" && upStreet.value !== ""
-            && upHousenumber.value !== "" && upPLZ.value !== "" && upCity.value !== "" && upCountry.value !== "") {
+            && upHousenumber.value !== "" && upPLZ.value !== "" && upCity.value !== "") {
 
-            contact.firstname = document.getElementById("upFirstname").value;
-            contact.lastname = document.getElementById("upLastname").value;
+            contact.firstname = upFirstname.value;
+            contact.lastname = upLastname.value;
             contact.street = upStreet.value;
             contact.housenumber = upHousenumber.value;
             contact.PLZ = upPLZ.value;
@@ -267,17 +280,13 @@ function processUpdate(contact, index) {
             upFedState.value = contact.fedState;
             contact.country = upCountry.value;
             contact.isPrivate = upIsPrivate.value;
-            /* 
-                        // delete old map marker
-                        var oldFullName = oldVorname + " " + oldNachname;
-                        deleteGeoJsonAndSetMap(oldAdresse, oldHausnummer, oldStadt, oldPLZ, oldFullName);
-                        console.log("old: " + oldHausnummer);
-             */
+
             // set map marker
             var fullName = contact.firstname + " " + contact.lastname;
             requestGeoJsonAndSetMap(contact.street, contact.housenumber, contact.city, contact.PLZ, fullName);
             console.log("new: " + upHousenumber.value);
 
+            deleteGeoJsonAndSetMap(oldAdresse, oldHausnummer, oldStadt, oldPLZ, oldFullName);
         } else {
             alert("Something went wrong, please try again and fill every required field");
         }
