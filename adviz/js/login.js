@@ -130,7 +130,6 @@ function login() {
     pass = document.getElementById("password").value
 
     if (user === userAdmina && pass === passAdmina) {
-        //alert("Admina")
         hideElem('login')
         showElem('map-container')
 
@@ -138,7 +137,6 @@ function login() {
 
         showMyContacts();
     } else if (user === userNormalo && pass === passNormalo) {
-        //alert("Normalo")
         hideElem('login')
         showElem('map-container')
 
@@ -167,12 +165,12 @@ var jsonData = []
 // make address request
 function requestGeoJsonAndSetMap(street, num, city, zip, name) {
     // Clean input
-    street = street.trim()
-    num = num.trim()
-    city = city.trim()
-    zip = zip.trim()
+    var street = street.trim()
+    var num = num.toString().trim()
+    var city = city.trim()
+    var zip = zip.toString().trim()
 
-    mapStreet = street + " " + num
+    var mapStreet = street + " " + num
 
     street = street.replace(/\s/g, '+') + "+";
     num = num.replace(/\s/g, '+') + "+";
@@ -203,12 +201,12 @@ function requestGeoJsonAndSetMap(street, num, city, zip, name) {
 // make address request
 function deleteGeoJsonAndSetMap(street, num, city, zip, name) {
     // Clean input
-    street = street.trim()
-    num = num.trim()
-    city = city.trim()
-    zip = zip.trim()
+    var street = street.trim()
+    var num = num.toString().trim();
+    var city = city.trim()
+    var zip = zip.toString().trim();
 
-    mapStreet = street + " " + num
+    var mapStreet = street + " " + num
 
     street = street.replace(/\s/g, '+') + "+";
     num = num.replace(/\s/g, '+') + "+";
@@ -233,7 +231,6 @@ function deleteGeoJsonAndSetMap(street, num, city, zip, name) {
     };
     xmlhttp.open("GET", url, true);
     xmlhttp.send();
-
 }
 
 

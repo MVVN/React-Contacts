@@ -61,7 +61,6 @@ function processAdd() {
 
 function showAllContacts() {
     var data = []
-
     if (isAdmin) {
         data = getAllContactsShort()
         fillTableWithData(data)
@@ -84,23 +83,19 @@ function showMyContacts() {
 
 function getAllContacts() {
     var results = []
-
     for (var userA of Object.keys(contacts)) {
         for (cont of Object.keys(contacts[userA])) {
             results.push(contacts[userA][cont])
         }
     }
-
     return results
 }
 
 function getAllUserContacts(userC) {
     var results = []
-
     for (var cont of Object.keys(contacts[userC])) {
         results.push(contacts[userC][cont])
     }
-
     return results
 }
 
@@ -128,9 +123,7 @@ function getAllUserContactsShort(userName) {
     for (var userA of Object.keys(allUserContacts)) {
         results.push(getContactShort(allUserContacts[userA]))
     }
-
     //    console.log(results)
-
     return results
 }
 
@@ -158,7 +151,6 @@ function getAllPublicContactsShort() {
             results.push(getContactShort(allContacts[userA]))
         }
     }
-
     return results
 }
 
@@ -199,7 +191,6 @@ function fillTableWithData(data) {
     let tableElem = document.getElementById("contacts")
 
     for (let i = 0; i < data.length; i++) {
-
         let tr = document.createElement('TR');
         tr.appendChild(document.createTextNode(data[i]));
         let tdBtn = document.createElement("td");
@@ -284,7 +275,6 @@ function processUpdate(contact, index) {
             // set map marker
             var fullName = contact.firstname + " " + contact.lastname;
             requestGeoJsonAndSetMap(contact.street, contact.housenumber, contact.city, contact.PLZ, fullName);
-            console.log("new: " + upHousenumber.value);
 
             deleteGeoJsonAndSetMap(oldAdresse, oldHausnummer, oldStadt, oldPLZ, oldFullName);
         } else {
