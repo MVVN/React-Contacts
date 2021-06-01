@@ -165,12 +165,12 @@ var jsonData = []
 // make address request
 function requestGeoJsonAndSetMap(street, num, city, zip, name) {
     // Clean input
-    var street = street.trim()
-    var num = num.toString().trim()
-    var city = city.trim()
-    var zip = zip.toString().trim()
+    street = street.trim()
+    num = num.toString().trim()
+    city = city.trim()
+    zip = zip.toString().trim()
 
-    var mapStreet = street + " " + num
+    mapStreet = street + " " + num
 
     street = street.replace(/\s/g, '+') + "+";
     num = num.replace(/\s/g, '+') + "+";
@@ -249,13 +249,14 @@ function extractData(jsonData) {
 // using full name as key, see below
 var mapMarkerMap = new Map();
 
-function deleteMapMarker(lat, lon, fullName, street) {
+function deleteMapMarker(fullName) {
     map.removeLayer(mapMarkerMap.get(fullName));
 }
 
 function setMapMarker(lat, lon, name, street) {
     var marker = L.marker([lat, lon]).addTo(map);
     marker.bindPopup("<b>" + name + " </b><br>" + street).openPopup();
+    mapMarkerMap.set(name, marker);
 }
 
 function setInitialMapMarkers() {

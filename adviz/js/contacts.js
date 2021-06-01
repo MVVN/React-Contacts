@@ -1,5 +1,5 @@
 
-// TODO: remove marker; 
+// TODO: remove marker on delete; (update works) 
 // TODO: Edit Contact1 & danach 2 --> beide Contacte == Contact2  ... 
 // TODO: --> hat mit var/let bei dem Edit Btn zu tun --> in fillTableWithData Methods
 
@@ -308,7 +308,7 @@ function processUpdate(contact) {
     let oldHausnummer = contact.housenumber;
     let oldStadt = contact.city;
     let oldPLZ = contact.PLZ;
-    var oldFullName = contact.firstname + " " + contact.lastname;
+    let oldFullName = contact.firstname + " " + contact.lastname;
 
     if (contact.isPrivate) {
         upIsPrivate.checked = true;
@@ -337,9 +337,10 @@ function processUpdate(contact) {
 
             // throws error and doesnt delete
             // deleteGeoJsonAndSetMap(oldAdresse, oldHausnummer, oldStadt, oldPLZ, oldFullName);
-
+            
             // set map marker
             var fullName = contact.firstname + " " + contact.lastname;
+            deleteMapMarker(fullName);
             requestGeoJsonAndSetMap(contact.street, contact.housenumber, contact.city, contact.PLZ, fullName);
         } else {
             alert("Something went wrong, please try again and fill every required field");
@@ -365,7 +366,7 @@ function processUpdate(contact) {
 
         // throws error and doesnt delete
         // deleteGeoJsonAndSetMap(oldAdresse, oldHausnummer, oldStadt, oldPLZ, oldFullName);
-
+        // deleteMapMarker(contact.firstname + " " + contact.lastname);
         hideElem('update');
         showElem("map-container");
         showMyContacts()
