@@ -10,5 +10,5 @@ const tileUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 
 var layer = new L.TileLayer(tileUrl, {attribution});
 
-// map.addLayer(layer);
-layer.addTo(map);
+map.addLayer(layer);
+// layer.addTo(map);

@@ -1,92 +1,9 @@
 var contacts = {};
-/* var contacts = {
-    "admina": {
-        0: {
-            "firstname": 'Jan',
-            "lastname": 'Greg',
-            "street": 'Elsenpfuhlstraße',
-            "housenumber": 20,
-            "PLZ": 13437,
-            "city": 'Berlin',
-            "fedState": 'Berlin',
-            "country": 'Deutschland',
-            "isPrivate": true,
-        },
-        1: {
-            "firstname": 'Maike',
-            "lastname": 'Becker',
-            "street": 'Forster Str',
-            "housenumber": 36,
-            "PLZ": 10999,
-            "city": 'Berlin',
-            "fedState": 'Berlin',
-            "country": 'Deutschland',
-            "isPrivate": false,
-        }
-    },
-
-    "normalo": {
-        0: {
-            "firstname": 'Ulrich',
-            "lastname": 'Bunt',
-            "street": 'Wilhelminenhofstraße',
-            "housenumber": 50,
-            "PLZ": 12459,
-            "city": 'Berlin',
-            "fedState": 'Berlin',
-            "country": 'Deutschland',
-            "isPrivate": true,
-        },
-        1: {
-            "firstname": 'Anna',
-            "lastname": 'Nass',
-            "street": 'Obstallee',
-            "housenumber": 5,
-            "PLZ": 13593,
-            "city": 'Berlin',
-            "fedState": 'Berlin',
-            "country": 'Deutschland',
-            "isPrivate": false,
-        }
-    }
-} */
-
-// var userAdmina = "admina"
-// var userNormalo = "normalo"
-// var passAdmina = "geheim"
-// var passNormalo = "123"
 
 let user = "";
 let pass = "";
 let uId = "";
 var isAdmin = false;
-
-
-// used to activate Login-Button by Enter Key
-var input = document.getElementById("password");
-input.addEventListener("keyup", function (event) {
-    if (event.keyCode === 13) {   // keycode for Enter is 13
-        event.preventDefault();
-        document.getElementById("loginBtn").click();
-    }
-});
-
-// hides html tag
-function hideElem(id) {
-    var elem = document.getElementById(id);
-    elem.style.display = 'none';
-}
-
-// shows html tag again
-function showElem(id) {
-    var elem = document.getElementById(id);
-    elem.style.display = ''; // leaving the string empty defaults to normal
-}
-
-// set content of html tag
-function setHTML(id, content) {
-    document.getElementById(id).innerHTML = content;
-}
 
 function adminaLoginSetup() {
     // console.log("In AdminaLoginSetup. . .");
@@ -95,32 +12,40 @@ function adminaLoginSetup() {
     document.getElementById("owner").disabled = false;
     fillDropDownWithUsernames();
     document.getElementById("owner").selectedIndex = 1;
+    fillTableWithUserContacts();
 }
 
 function normaloLoginSetup(userName) {
     // console.log("In NormaloLoginSetup. . .");
     setHTML('welcome', 'Hi ' + userName + ' :)');
-
-    var select = document.getElementById("owner");
-    var el = document.createElement("option");
-    el.set
-    el.textContent = username;
-    el.value = username;
+    deleteDropdown();
+    createDrowndown();
+    let select = document.getElementById("owner");
+    let el = document.createElement("option");
     select.appendChild(el);
-
-    // setHTML('optionId', userName);
+    el.setAttribute("id", "optionId");
+    el.innerHTML = userName;
+    el.value = uId;
+    fillTableWithUserContacts();    
 }
 
-function fillDropDownWithUsernames() {
+async function fillDropDownWithUsernames() {
     console.log("In fillDropDownWithUsernames. . .");
-    var select = document.getElementById("owner");
 
-    for (var userA of Object.keys(contacts)) {
-        console.log("userA", userA);
-        var el = document.createElement("option");
-        el.textContent = userA;
-        el.value = userA;
+    deleteDropdown();
+    createDrowndown();
+
+    let select = document.getElementById("owner");
+    
+    let data = await getAllUserRequestV3();
+
+    for (let i = 0; i < data.length; i++) {
+        console.log(`data[i]`, data[i]);
+        let el = document.createElement("option");
         select.appendChild(el);
+        el.setAttribute("id", "optionId");
+        el.innerHTML = data[i].username;
+        el.value = data[i]._id;
     }
 }
 
@@ -279,119 +204,68 @@ function setInitialMapMarkers() {
 
 ///////////////////////////////////////////////////////////////////7
 
-function loginHttpRequest(url, jsonString) {
-    // console.log("In loginHttpRequest. . .");
-    var xmlhttp = new XMLHttpRequest();
 
-    xmlhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            var result = JSON.parse(this.responseText);
-            if (result.length == 0) {
-                console.log("http request result length is 0.")
-            } else {
-                // console.log(result)
-                if (result["user"]["isAdmin"] == true) {
+// function refreshContacts() {
+//     // console.log("In refreshContacts. . .");
+//     var xmlhttp = new XMLHttpRequest();
+//     var url = "http://localhost:3000/adviz/all";
+//     contacts = {}
 
-                    //getContactsHttpRequest(result["user"]["username"], result["user"]["_id"])
-                    uId = result["user"]["_id"];
+//     xmlhttp.onreadystatechange = function () {
+//         if (this.readyState == 4 && this.status == 200) {
+//             var result = JSON.parse(this.responseText);
+//             if (result.length == 0) {
+//                 console.log("http request result length is 0.")
+//             } else {
+//                 console.log("in refreshContacts; result:", result);
+//                 //console.log(result[0]["username"])
+//                 for (var id of Object.keys(result)) {
+//                     console.log("in refreshContacts; id:", id);
+//                     console.log("in refreshContacts; result[id]:", result[id]);
+//                     console.log("result[id][contacts]", result[id][contacts]);
+//                     contacts[result[id]["username"]] = {}
+//                     getContactRequest(result[id]["_id"], result[id]["username"])
+//                 }
+//                 /* for (let i = 0; i < result.length; i++) {
+//                     // console.log("in refreshContacts; result[i].contacts", result[i].contacts);
+//                     for (let j = 0; j < result[i].contacts.length; j++) {
+//                         // console.log("in refreshContacts; result[i].contacts[j]", result[i].contacts[j]);
+//                         let contactId=result[i].contacts[j];
+//                         let contactOwner= result[i].username;
+//                         getContactRequest(contactId, contactOwner);
+//                     }                   
+//                 } */
+//             }
 
-                    refreshContacts()
+//         }
+//     };
 
-                    //alert("Admina")
-                    hideElem('login')
-                    showElem('map-container')
+//     //xmlhttp.open("GET", url, true);
+//     xmlhttp.open("GET", url, true);
+//     xmlhttp.send();
+// }
 
-                    adminaLoginSetup()
+// function getContactRequest(userId, userName) {
+//     // console.log("In getContactRequest. . .");
+//     var xmlhttp = new XMLHttpRequest();
+//     var url = "http://localhost:3000/adviz/contacts?userId=" + userId;
 
-                } else {
+//     xmlhttp.onreadystatechange = function () {
+//         if (this.readyState == 4 && this.status == 200) {
+//             var result = JSON.parse(this.responseText);
+//             if (result.length == 0) {
+//                 console.log("http request result length is 0.")
+//             } else {
+//                 contacts[userName] = result;
 
-                    //getContactsHttpRequest(result["user"]["username"], result["user"]["_id"])
-                    uId = result["user"]["_id"];
-
-                    refreshContacts()
-
-                    //alert("Normalo")
-                    hideElem('login')
-                    showElem('map-container')
-
-                    normaloLoginSetup(result["user"]["username"])
-
-                }
-
-            }
-        } else if (this.readyState == 4 && this.status == 401) {
-            alert("Wrong Login/Pass");
-        }
-
-    };
-    //xmlhttp.open("GET", url, true);
-    xmlhttp.open("POST", url, true);
-    xmlhttp.setRequestHeader("Content-type", "application/json");
-    xmlhttp.send(jsonString);
-}
-
-function refreshContacts() {
-    // console.log("In refreshContacts. . .");
-    var xmlhttp = new XMLHttpRequest();
-    var url = "http://localhost:3000/adviz/all";
-    contacts = {}
-
-    xmlhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            var result = JSON.parse(this.responseText);
-            if (result.length == 0) {
-                console.log("http request result length is 0.")
-            } else {
-                // console.log("in refreshContacts; result:", result);
-                //console.log(result[0]["username"])
-                for (var id of Object.keys(result)) {
-                    console.log("in refreshContacts; id:", id);
-                    console.log("in refreshContacts; result[ind]:", result[id]);
-                    console.log("result[id][contacts]", result[id][contacts]);
-                    contacts[result[id]["username"]] = {}
-                    getContactRequest(result[id]["_id"], result[id]["username"])
-                }
-                /* for (let i = 0; i < result.length; i++) {
-                    // console.log("in refreshContacts; result[i].contacts", result[i].contacts);
-                    for (let j = 0; j < result[i].contacts.length; j++) {
-                        // console.log("in refreshContacts; result[i].contacts[j]", result[i].contacts[j]);
-                        let contactId=result[i].contacts[j];
-                        let contactOwner= result[i].username;
-                        getContactRequest(contactId, contactOwner);
-                    }                   
-                } */
-            }
-
-        }
-    };
-
-    //xmlhttp.open("GET", url, true);
-    xmlhttp.open("GET", url, true);
-    xmlhttp.send();
-}
-
-function getContactRequest(userId, userName) {
-    // console.log("In getContactRequest. . .");
-    var xmlhttp = new XMLHttpRequest();
-    var url = "http://localhost:3000/adviz/contacts?userId=" + userId;
-
-    xmlhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            var result = JSON.parse(this.responseText);
-            if (result.length == 0) {
-                console.log("http request result length is 0.")
-            } else {
-                contacts[userName] = result;
-
-                showMyContacts();
-                if (mapMarkerMap.size < 1) {
-                    setInitialMapMarkers();
-                }
-            }
-        }
-    };
-
-    //xmlhttp.open("GET", url, true);
-    xmlhttp.open("GET", url, true);
-    xmlhttp.send();
-}
+//                 showMyContacts();
+//                 if (mapMarkerMap.size < 1) {
+//                     setInitialMapMarkers();
+//                 }
+//             }
+//         }
+//     };
+//     //xmlhttp.open("GET", url, true);
+//     xmlhttp.open("GET", url, true);
+//     xmlhttp.send();
+// }

@@ -1,14 +1,8 @@
-
-// TODO: remove marker on delete; (update works) 
-// TODO: Edit Contact1 & danach 2 --> beide Contacte == Contact2  ... 
-// TODO: --> hat mit var/let bei dem Edit Btn zu tun --> in fillTableWithData Methods
-// TODO: refresh add values after adding a contact
-
-function getUserDropdownText() {
+/* function getUserDropdownText() {
     // console.log("In getUserDropdownText. . .");
     var elem = document.getElementById("owner");
     return elem.options[elem.selectedIndex].text;
-}
+} */
 
 // functions
 function addNewContact() {
@@ -16,25 +10,25 @@ function addNewContact() {
     hideElem('map-container');
     showElem("add");
 
-    // let addBtn = document.getElementById("addBtn");
-    addBtn.addEventListener("click", processAdd);
+    deleteAddButtons();
+    createAddButtons();
+
+    let addBtn = document.getElementById("addBtn");
+    let addBackBtn = document.getElementById("addBackBtn");
+
+    addBtn.addEventListener("click", processAddV2);
 
     addBackBtn.addEventListener("click", function (event) {
         // console.log("Close Add Window.");
         clearAddForm();
         hideElem('add');
         showElem("map-container");
-        //showMyContacts()
-
-        refreshContacts();
+        showMyContacts()
     });
 }
 
-var latD = 52.4559799;
-var lonD = 13.6263577;
-
-function processAdd() {
-    // console.log("In processAdd. . .");
+async function processAddV2() {
+    // console.log("In processAddV2. . .");
     let addFirstname = document.getElementById("addFirstname").value.trim();
     let addLastname = document.getElementById("addLastname").value.trim();
     let addStreet = document.getElementById("addStreet").value.trim();
@@ -44,57 +38,41 @@ function processAdd() {
     let addFedState = document.getElementById("addFedState").value.trim();
     let addCountry = document.getElementById("addCountry").value.trim();
     // let addIsPrivate = document.getElementById("addIsPrivate").value;
-    let addIsPrivate = true;
-    if (document.getElementById("addIsPrivate").value === "off") {
-        addPrivat = false;
-    }
+    let addIsPrivate = document.getElementById("addIsPrivate").checked ? true : false;
 
-    // var userA = getUserDropdownText()
+    let ownerId = document.getElementById("owner").value;
+
+    //TODO: get new lat and lon value for update
+    let newLat;
+    let newLon;
 
     if (addLastname !== "" && addFirstname !== "" && addStreet !== ""
         && addHousenumber !== "" && addPLZ !== "" && addCity !== "") {
 
-        // numOfContacts = Object.keys(contacts[userA]).length
-
-        /*         contacts[userA][numOfContacts] = {
-                    "firstname": addFirstname,
-                    "lastname": addLastname,
-                    "street": addStreet,
-                    "housenumber": addHousenumber,
-                    "PLZ": addPLZ,
-                    "city": addCity,
-                    "fedState": addFedState,
-                    "country": addCountry,
-                    "isPrivate": addIsPrivate,
-                } */
-
-                //TODO: get lat and lon !!!
-        let addJson = {
-            "firstname": addFirstname,
-            "lastname": addLastname,
-            "street": addStreet,
-            "housenumber": addHousenumber,
-            "zipcode": addPLZ,
-            "city": addCity,
-            "fedState": addFedState,
-            "country": addCountry,
-            "isPrivate": addIsPrivate,
+        let newContact = {
+            vorname: addFirstname,
+            nachname: addLastname,
+            adresse: addStreet,
+            hausnummer: addHousenumber,
+            plz: addPLZ,
+            stadt: addCity,
+            fedState: addFedState,
+            land: addCountry,
+            privat: addIsPrivate,
+            owner: ownerId,
+            lat: 52.4559799,
+            lon: 13.6263577
         }
-        addContactRequest(JSON.stringify(addJson));
+
+        await postNewContact(newContact);
+
+        hideElem('add');
+        showElem("map-container");
+        clearAddForm();
+        showMyContacts();
     } else {
         alert("Something went wrong, please try again and fill every required field");
     }
-
-    hideElem('add');
-    showElem("map-container");
-    // showMyContacts()
-
-    refreshContacts();
-
-    // set map marker
-    let fullName = addFirstname + " " + addLastname;
-    requestGeoJsonAndSetMap(addStreet, addHousenumber, addCity, addPLZ, fullName);
-    clearAddForm();
 }
 
 function clearAddForm() {
@@ -109,7 +87,7 @@ function clearAddForm() {
     document.getElementById("addCountry").value = "";
     document.getElementById("addIsPrivate").value = true;
 }
-
+/* 
 function addContactRequest(contactJson) {
     // console.log("In addContactRequest. . .");
     var xmlhttp = new XMLHttpRequest();
@@ -132,29 +110,18 @@ function addContactRequest(contactJson) {
     xmlhttp.open("POST", url, true);
     xmlhttp.setRequestHeader("Content-type", "application/json");
     xmlhttp.send(contactJson);
-}
+} */
+
 //////////////////////////////////////////
 // Show Contacts
 //////////////////////////////////////////
 
 function showAllContacts() {
-    // console.log("In showAllContacts. . .");
-    let data = []
-    if (isAdmin) {
-        data = getAllContactsShort();
-        fillTableWithData(data)
-    } else {
-        data = [].concat(getAllPublicContactsShort(), getPrivateUserContactsShort(user));
-        fillTableWithData(data)
-    }
+    fillTableWithAllContacts(isAdmin);
 }
 
 function showMyContacts() {
-    // console.log("In showMyContacts. . .");
-    //using global "user" variable
-    //var userA = getUserDropdownText()
-    var data = getAllUserContactsShort(user);
-    fillTableWithData(data);
+    fillTableWithUserContacts();
 }
 //////////////////////////////////////////
 // Get contacts data
@@ -178,7 +145,7 @@ function getAllContacts() {
     }
     return results
 } */
-
+/* 
 function getAllUserContactsAsList(userC) {
     // console.log("In getAllContactsAsList. . .");
     let results = [];
@@ -198,12 +165,12 @@ function deleteContact(userC, firstname, lastname) {
     }
     //TODO: ?
     delete contacts[user][index];
-}
+} */
 
 //////////////////////////////////////////
 // Get short contacts data for table
 //////////////////////////////////////////
-
+/* 
 // All contacts in short form
 function getAllContactsShort() {
     // console.log("In getAllContactsShort. . .");
@@ -266,7 +233,7 @@ function getContactShort(contactId) {
     let address = contactId["street"] + " " + contactId["housenumber"]
 
     return [name + "\n" + address];
-}
+} */
 
 /* function getContactShortWithContactObj(contact) {
     let name = contact.firstname + " " + contact.lastname;
@@ -279,26 +246,13 @@ function getContactShort(contactId) {
 // Event Listerners
 //////////////////////////////////////////
 
-function addEventToElement() {
 
-}
-
-// deletes the table before filling it
-function deleteTableContent(tableId) {
-    // console.log("In deleteTableContent. . .");
-    let table = document.getElementById(tableId);
-    let rowCount = table.rows.length;
-
-    for (let i = rowCount - 1; i > 0; i--) {
-        table.deleteRow(i);
-    }
-}
 
 //////////////////////////////////////////
 // Render HTML Table with data
 //////////////////////////////////////////
 
-function fillTableWithData(data) {
+/* function fillTableWithData(data) {
     // console.log("In fillTableWithData. . .");
     deleteTableContent("contacts");
     let tableElem = document.getElementById("contacts");
@@ -321,75 +275,123 @@ function fillTableWithData(data) {
         tr.appendChild(tdBtn);
         tableElem.appendChild(tr);
     }
+} */
+
+async function fillTableWithUserContacts() {
+    console.log("In fillTableWithUserContacts. . .");
+    deleteTableContent("contacts");
+    let tableElem = document.getElementById("contacts");
+
+    let data = await getUserContactsRequestV2(uId);
+    console.log(`data`, data);
+    for (let i = 0; i < data.length; i++) {
+        let tr = document.createElement("TR");
+        let contactName = `${data[i].vorname} ${data[i].nachname}`;
+        let contactAddress = `${data[i].adresse} ${data[i].hausnummer}`;
+        tr.appendChild(document.createTextNode(contactName));
+        tr.appendChild(document.createElement("br"));
+        tr.appendChild(document.createTextNode(contactAddress));
+        let tdBtn = document.createElement("td");
+        tdBtn.innerHTML = `<p class="editBtn">Edit</p>`;
+        tdBtn.value = data[i]._id;
+
+        tdBtn.addEventListener("click", function (event) {
+            processUpdateV2(tdBtn.value);
+        });
+        tr.appendChild(tdBtn);
+        tableElem.appendChild(tr);
+    }
 }
 
-/* function fillTableWithDataAdmin() {
-    deleteTableContent("contacts")
-    let tableElem = document.getElementById("contacts")
+function fillTableWithAllContacts(isAdmin) {
+    console.log("In fillTableWithAllContacts. . .");
+    deleteTableContent("contacts");
 
-    for (let userA of Object.keys(contacts)) {
-        for (let cont of Object.keys(contacts[userA])) {
-            let tr = document.createElement('TR');
-            let contactAsText = getContactShortWithContactObj(contacts[userA][cont]);
-            tr.appendChild(document.createTextNode(contactAsText));
-            let tdBtn = document.createElement("td");
-            tdBtn.innerHTML = `<p class="editBtn">Edit</p>`;
+    if (isAdmin) {
+        fillTableWithAllContactsForAdmin();
+    } else {
+        fillTableWithPublicContacts();
+    }
+}
 
-            let contact = contacts[userA][cont];
-            tdBtn.addEventListener("click", function (event) {
-                processUpdate(contact);
-            });
-            tr.appendChild(tdBtn);
+async function fillTableWithAllContactsForAdmin() {
+    console.log("In fillTableWithAllContactsForAdmin. . .");
+    deleteTableContent("contacts");
+    let tableElem = document.getElementById("contacts");
+
+    let data = await getAllContactsRequestV2();
+    for (let i = 0; i < data.length; i++) {
+        let tr = document.createElement("TR");
+        let contactName = `${data[i].vorname} ${data[i].nachname}`;
+        let contactAddress = `${data[i].adresse} ${data[i].hausnummer}`;
+        tr.appendChild(document.createTextNode(contactName));
+        tr.appendChild(document.createElement("br"));
+        tr.appendChild(document.createTextNode(contactAddress));
+        let tdBtn = document.createElement("td");
+        tdBtn.innerHTML = `<p class="editBtn">Edit</p>`;
+        tdBtn.value = data[i]._id;
+
+        tdBtn.addEventListener("click", function (event) {
+            processUpdateV2(tdBtn.value);
+        });
+
+        tr.appendChild(tdBtn);
+        tableElem.appendChild(tr);
+
+    }
+}
+
+async function fillTableWithPublicContacts() {
+    console.log("In fillTableWithPublicContacts. . .");
+    deleteTableContent("contacts");
+    let tableElem = document.getElementById("contacts");
+
+    let data = await getAllContactsRequestV2();
+
+    for (let i = 0; i < data.length; i++) {
+        if (data[i].owner == uId || !data[i].privat) {
+            let tr = document.createElement("TR");
+            let contactName = `${data[i].vorname} ${data[i].nachname}`;
+            let contactAddress = `${data[i].adresse} ${data[i].hausnummer}`;
+            tr.appendChild(document.createTextNode(contactName));
+            tr.appendChild(document.createElement("br"));
+            tr.appendChild(document.createTextNode(contactAddress));
+            if (data[i].owner == uId) {
+                let tdBtn = document.createElement("td");
+                tdBtn.innerHTML = `<p class="editBtn">Edit</p>`;
+                tdBtn.value = data[i]._id;
+
+                tdBtn.addEventListener("click", function (event) {
+                    processUpdateV2(tdBtn.value);
+                });
+
+                tr.appendChild(tdBtn);
+            }
             tableElem.appendChild(tr);
         }
     }
-} */
-
-/* function fillTableWithDataNotAdmin() {
-    deleteTableContent("contacts")
-    let tableElem = document.getElementById("contacts")
-
-    for (let userA of Object.keys(contacts)) {
-        for (let cont of Object.keys(contacts[userA])) {
-            if (contacts[userA][cont].isPrivate == true && userA != user) {
-                // don't add to table
-            } else {
-                let tr = document.createElement('TR');
-                let contactAsText = getContactShortWithContactObj(contacts[userA][cont]);
-                tr.appendChild(document.createTextNode(contactAsText));
-                let tdBtn = document.createElement("td");
-                if (userA == user) {
-                    tdBtn.innerHTML = `<p class="editBtn">Edit</p>`;
-                } else {
-                    tdBtn.innerHTML = `<p class="editBtn">---</p>`;
-                }
-
-
-                let contact = contacts[userA][cont];
-                if (userA == user) {
-                    tdBtn.addEventListener("click", function (event) {
-                        processUpdate(contact);
-                    });
-                }
-                tr.appendChild(tdBtn);
-                tableElem.appendChild(tr);
-            }
-        }
-    }
-} */
+}
 
 //////////////////////////////////////////
 // Update Contacts
 //////////////////////////////////////////
 
-function processUpdate(contact) {
-    // console.log("In processUpdate. . .");
-    // console.log("update contact: " + contact);
+
+async function processUpdateV2(contactId) {
+    console.log("In processUpdateV2. . .");
+    let data = await getContactWithId(contactId);
+
     hideElem("map-container");
     showElem("update");
 
+    deleteUpdateButtons();
+    createUpdateButtons();
+
+    console.log(`data`, data);
+
     let upBtn = document.getElementById("upBtn");
     let delBtn = document.getElementById("delBtn");
+    let upBackBtn = document.getElementById("upBackBtn");
 
     let upFirstname = document.getElementById("upFirstname");
     let upLastname = document.getElementById("upLastname");
@@ -401,109 +403,72 @@ function processUpdate(contact) {
     let upCountry = document.getElementById("upCountry");
     let upIsPrivate = document.getElementById("upIsPrivate");
 
-    upFirstname.value = contact.firstname;
-    upLastname.value = contact.lastname;
-    upStreet.value = contact.street;
-    upHousenumber.value = contact.housenumber;
-    upPLZ.value = contact.zipcode;
-    upCity.value = contact.city;
-    upFedState.value = contact.fedState;
-    upCountry.value = contact.country;
-    upIsPrivate.value = contact.isPrivate;
+    upFirstname.value = data.vorname;
+    upLastname.value = data.nachname;
+    upStreet.value = data.adresse;
+    upHousenumber.value = data.hausnummer;
+    upPLZ.value = data.plz;
+    upCity.value = data.stadt;
+    upFedState.value = data.fedState;
+    upCountry.value = data.land;
+    // upIsPrivate.value = data.privat;
+    upIsPrivate.checked = data.privat ? true : false;
 
-    // data to delete old map marker
-    let oldStreet = contact.street;
-    let oldHousenumber = contact.housenumber;
-    let oldCity = contact.city;
-    let oldZip = contact.zipcode;
-    let oldFullName = contact.firstname + " " + contact.lastname;
+    //TODO: get new lat and lon value for update
+    let newLat;
+    let newLon;
 
-    /*     if (contact.isPrivate) {
-            upIsPrivate.checked = true;
-        } else {
-            upIsPrivate.checked = false;
-        } */
-
-    // if(upBtn.getAttribute("listener") !== "true") {
-    upBtn.addEventListener("click", function (event) {
-        // const elemClicked = event.target;
-        // elemClicked.setAttribute("listener", "true");
-
+    upBtn.addEventListener("click", async function (event) {
         if (upLastname.value !== "" && upFirstname.value !== "" && upStreet.value !== ""
             && upHousenumber.value !== "" && upPLZ.value !== "" && upCity.value !== "") {
 
-           /*  contact.firstname = upFirstname.value;
-            contact.lastname = upLastname.value;
-            contact.street = upStreet.value;
-            contact.housenumber = upHousenumber.value;
-            contact.PLZ = upPLZ.value;
-            contact.city = upCity.value;
-            upFedState.value = contact.fedState;
-            contact.country = upCountry.value;
-            contact.isPrivate = upIsPrivate.value;
 
-            throws error and doesnt delete
-            deleteGeoJsonAndSetMap(oldAdresse, oldHausnummer, oldStadt, oldPLZ, oldFullName);
-
-            set map marker */
-            
-            //TODO: get new lat and lon value for update
-            let addJson = {
-                "firstname": upFirstname.value,
-                "lastname": upLastname.value,
-                "street": upStreet.value,
-                "housenumber": upHousenumber.value,
-                "zipcode": upPLZ.value,
-                "city": upCity.value,
-                "fedState": upFedState.value,
-                "country": upCountry.value,
-                "isPrivate": upIsPrivate.value,
-                "owner": uId, // Global variable in login.js
-                "lat": latD,
-                "lon": lonD
+            upIsPrivate.value = upIsPrivate.checked ? true : false;
+           
+            let newContact = {
+                vorname: upFirstname.value,
+                nachname: upLastname.value,
+                adresse: upStreet.value,
+                hausnummer: upHousenumber.value,
+                plz: upPLZ.value,
+                stadt: upCity.value,
+                fedState: upFedState.value,
+                land: upCountry.value,
+                privat: upIsPrivate.value,
+                owner: data.owner,
+                lat: 52.4559799,
+                lon: 13.6263577
             }
 
-            updateContactRequest(JSON.stringify(updateJson), contact._id)
+            updateContactWithId(data._id, newContact);
 
-            var fullName = contact.firstname + " " + contact.lastname;
-            // deleteMapMarker(fullName);
-            deleteMapMarker(oldFullName);
-            requestGeoJsonAndSetMap(contact.street, contact.housenumber, contact.city, contact.zipcode, fullName);
+            hideElem('update');
+            showElem("map-container");
+            showMyContacts();
         } else {
             alert("Something went wrong, please try again and fill every required field");
         }
-
-        hideElem("update");
-        showElem("map-container");
-        refreshContacts();
     });
-    // }
 
-
-    delBtn.addEventListener("click", function (event) {
+    delBtn.addEventListener("click", async function (event) {
         hideElem('update');
         showElem("map-container");
 
-        // let fname = document.getElementById("upFirstname").value;
-        // let lname = document.getElementById("upLastname").value;
-        //deleteContact(user, fname, lname);
-        deleteContactRequest(contact._id);
-        // deleteMapMarker(contact.vorname + " " + contact.nachname)
-        deleteMapMarker(oldFullName);
-
-        // throws error and doesnt delete
-        // deleteGeoJsonAndSetMap(oldAdresse, oldHausnummer, oldStadt, oldPLZ, oldFullName);
-        // deleteMapMarker(contact.firstname + " " + contact.lastname);
-        refreshContacts()
+        let oldUserContacts = await getUserContactsRequestV2(data.owner);
+        console.log(`oldUserContacts`, oldUserContacts);
+        console.log(`data.owner`, data.owner);
+        console.log(`data._id`, data._id);
+        await deleteContactWithId(data._id);
+        let newUserContacts = await getUserContactsRequestV2(data.owner);
+        console.log(`newUserContacts`, newUserContacts);
+        showMyContacts();
     });
-    
+
     upBackBtn.addEventListener("click", function (event) {
         // console.log("upBackBtn used.")
         hideElem('update');
         showElem("map-container");
-        //showMyContacts()
-
-        refreshContacts()
+        showMyContacts();
     });
 }
 

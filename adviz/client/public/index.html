@@ -9,13 +9,17 @@
 
     <link rel="stylesheet" href="css/stylesheet.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.3.0/dist/leaflet.markercluster.js"></script>
 </head>
 
 <body>
     <div class="grid-container">
 
         <!-- <div class="leftside"></div> -->
+
+        <!-- <input type="button" value="testV2" id="testV2Btn" onclick="testV2();"> -->
 
         <div class="main">
             <div class="header">
@@ -59,7 +63,7 @@
             <div class="add" id="add">
                 <h3>Add new Contact</h3>
                 <br>
-                <form action="Add">
+                <form action="Add" id="add-form">
                     <label for="firstname">* Vorname</label>
                     <input type="text" name="firstname" id="addFirstname" required>
                     <br><br>
@@ -87,7 +91,7 @@
                     <label for="isPrivate">* Privat: </label>
                     <input type="checkbox" name="isPrivate" id="addIsPrivate" checked>
                     <br><br>
-                    <label for="owner">* Owner: </label>
+                    <label for="owner" id="ownerLabel">* Owner: </label>
                     <select name="owner" id="owner">
                         <!-- <option id="optionId"></option> -->
                     </select>
@@ -100,7 +104,7 @@
             <div class="update" id="update">
                 <h3>Update Contact</h3>
                 <br>
-                <form action="Update">
+                <form action="Update" id="update-form">
                     <label for="firstname">* Vorname</label>
                     <input type="text" name="firstname" id="upFirstname" required>
                     <br><br>
@@ -143,6 +147,11 @@
     <script src="js/map.js"></script>
     <script src="js/login.js"></script>
     <script src="js/contacts.js"></script>
+    <script src="js/mapV2.js"></script>
+    <script src="js/loginV2.js"></script>
+    <script src="js/contactsV2.js"></script>
+    <script src="js/dbAccess.js"></script>
+    <script src="js/supportFunctions.js"></script>
 
     <script>
         var elem = document.getElementById('map-container');
