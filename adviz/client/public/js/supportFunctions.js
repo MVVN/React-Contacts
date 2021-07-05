@@ -122,3 +122,12 @@ function deleteTableContent(tableId) {
         table.deleteRow(i);
     }
 }
+
+// Get relevant data from json array
+function extractLatLon(jsonData) {
+    // console.log("In extractData. . .");
+    var latitude = jsonData[0]["lat"];
+    var longitude = jsonData[0]["lon"];
+
+    return [latitude, longitude];
+}

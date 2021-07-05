@@ -2,6 +2,7 @@ let allUser = new Map();
 let activeUserName;
 
 async function testV2() {
+    getGeoData("Teutonenstr", "32a", "Berlin", "12524");
 }
 
 // access DB and save every user in allUser<username, userObject>
@@ -252,4 +253,52 @@ function loginHttpRequest(url, jsonString) {
     xmlhttp.open("POST", url, true);
     xmlhttp.setRequestHeader("Content-type", "application/json");
     xmlhttp.send(jsonString);
+}
+
+
+function updateContactRequest(contactJson, contactId) {
+    // console.log("In updateContactRequest. . .");
+    var xmlhttp = new XMLHttpRequest();
+    var url = "http://localhost:3000/adviz/contacts/" + contactId;
+
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 204) {
+            var result = this.responseText;
+            if (result.length != 0) {
+                console.log("http request result is not 0.")
+            } else {
+                console.log(result)
+                console.log("update user success, id: " + result)
+            }
+        } else if (this.readyState == 4 && this.status == 404) {
+            alert("Contact Id not found")
+        }
+
+    };
+    xmlhttp.open("PUT", url, true);
+    xmlhttp.setRequestHeader("Content-type", "application/json");
+    xmlhttp.send(contactJson);
+}
+
+function deleteContactRequest(contactId) {
+    // console.log("In deleteContactRequest. . .");
+    var xmlhttp = new XMLHttpRequest();
+    var url = "http://localhost:3000/adviz/contacts/" + contactId;
+
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 204) {
+            var result = this.responseText;
+            if (result.length != 0) {
+                console.log("http request result is not 0.")
+            } else {
+                console.log("delete user success, id: " + result)
+            }
+        } else if (this.readyState == 4 && this.status == 404) {
+            alert("Contact Id not found")
+        }
+
+    };
+
+    xmlhttp.open("DELETE", url, true);
+    xmlhttp.send();
 }

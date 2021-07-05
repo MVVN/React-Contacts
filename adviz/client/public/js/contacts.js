@@ -42,9 +42,12 @@ async function processAddV2() {
 
     let ownerId = document.getElementById("owner").value;
 
-    //TODO: get new lat and lon value for update
-    let newLat;
-    let newLon;
+    let geoData = await getGeoData(addStreet, addHousenumber, addCity, addPLZ);
+
+    console.log(`geoData in Add`, geoData);
+
+    let newLat = geoData[0];
+    let newLon = geoData[1];
 
     if (addLastname !== "" && addFirstname !== "" && addStreet !== ""
         && addHousenumber !== "" && addPLZ !== "" && addCity !== "") {
@@ -60,8 +63,8 @@ async function processAddV2() {
             land: addCountry,
             privat: addIsPrivate,
             owner: ownerId,
-            lat: 52.4559799,
-            lon: 13.6263577
+            lat: newLat,
+            lon: newLon
         }
 
         await postNewContact(newContact);
@@ -283,7 +286,7 @@ async function fillTableWithUserContacts() {
     let tableElem = document.getElementById("contacts");
 
     let data = await getUserContactsRequestV2(uId);
-    console.log(`data`, data);
+    // console.log(`data in fillTableWithUserContacts`, data);
     for (let i = 0; i < data.length; i++) {
         let tr = document.createElement("TR");
         let contactName = `${data[i].vorname} ${data[i].nachname}`;
@@ -301,10 +304,11 @@ async function fillTableWithUserContacts() {
         tr.appendChild(tdBtn);
         tableElem.appendChild(tr);
     }
+    setAllMapMarker(data);
 }
 
 function fillTableWithAllContacts(isAdmin) {
-    console.log("In fillTableWithAllContacts. . .");
+    // console.log("In fillTableWithAllContacts. . .");
     deleteTableContent("contacts");
 
     if (isAdmin) {
@@ -315,7 +319,7 @@ function fillTableWithAllContacts(isAdmin) {
 }
 
 async function fillTableWithAllContactsForAdmin() {
-    console.log("In fillTableWithAllContactsForAdmin. . .");
+    // console.log("In fillTableWithAllContactsForAdmin. . .");
     deleteTableContent("contacts");
     let tableElem = document.getElementById("contacts");
 
@@ -337,16 +341,17 @@ async function fillTableWithAllContactsForAdmin() {
 
         tr.appendChild(tdBtn);
         tableElem.appendChild(tr);
-
     }
+    setAllMapMarker(data);
 }
 
 async function fillTableWithPublicContacts() {
-    console.log("In fillTableWithPublicContacts. . .");
+    // console.log("In fillTableWithPublicContacts. . .");
     deleteTableContent("contacts");
     let tableElem = document.getElementById("contacts");
 
     let data = await getAllContactsRequestV2();
+    markerGroup.clearLayers();
 
     for (let i = 0; i < data.length; i++) {
         if (data[i].owner == uId || !data[i].privat) {
@@ -364,10 +369,10 @@ async function fillTableWithPublicContacts() {
                 tdBtn.addEventListener("click", function (event) {
                     processUpdateV2(tdBtn.value);
                 });
-
                 tr.appendChild(tdBtn);
             }
             tableElem.appendChild(tr);
+            setMapMarkerForNonAdmin(data[i]);
         }
     }
 }
@@ -378,7 +383,7 @@ async function fillTableWithPublicContacts() {
 
 
 async function processUpdateV2(contactId) {
-    console.log("In processUpdateV2. . .");
+    // console.log("In processUpdateV2. . .");
     let data = await getContactWithId(contactId);
 
     hideElem("map-container");
@@ -387,7 +392,7 @@ async function processUpdateV2(contactId) {
     deleteUpdateButtons();
     createUpdateButtons();
 
-    console.log(`data`, data);
+    // console.log(`data`, data);
 
     let upBtn = document.getElementById("upBtn");
     let delBtn = document.getElementById("delBtn");
@@ -414,9 +419,6 @@ async function processUpdateV2(contactId) {
     // upIsPrivate.value = data.privat;
     upIsPrivate.checked = data.privat ? true : false;
 
-    //TODO: get new lat and lon value for update
-    let newLat;
-    let newLon;
 
     upBtn.addEventListener("click", async function (event) {
         if (upLastname.value !== "" && upFirstname.value !== "" && upStreet.value !== ""
@@ -424,7 +426,13 @@ async function processUpdateV2(contactId) {
 
 
             upIsPrivate.value = upIsPrivate.checked ? true : false;
-           
+
+            let geoData = await getGeoData(upStreet.value, upHousenumber.value, upCity.value, upPLZ.value);
+            console.log(`geoData`, geoData);
+
+            let newLat = geoData[0];
+            let newLon = geoData[1];
+
             let newContact = {
                 vorname: upFirstname.value,
                 nachname: upLastname.value,
@@ -436,8 +444,8 @@ async function processUpdateV2(contactId) {
                 land: upCountry.value,
                 privat: upIsPrivate.value,
                 owner: data.owner,
-                lat: 52.4559799,
-                lon: 13.6263577
+                lat: newLat,
+                lon: newLon
             }
 
             updateContactWithId(data._id, newContact);
@@ -455,12 +463,12 @@ async function processUpdateV2(contactId) {
         showElem("map-container");
 
         let oldUserContacts = await getUserContactsRequestV2(data.owner);
-        console.log(`oldUserContacts`, oldUserContacts);
-        console.log(`data.owner`, data.owner);
-        console.log(`data._id`, data._id);
+        // console.log(`oldUserContacts`, oldUserContacts);
+        // console.log(`data.owner`, data.owner);
+        // console.log(`data._id`, data._id);
         await deleteContactWithId(data._id);
         let newUserContacts = await getUserContactsRequestV2(data.owner);
-        console.log(`newUserContacts`, newUserContacts);
+        // console.log(`newUserContacts`, newUserContacts);
         showMyContacts();
     });
 
@@ -470,52 +478,5 @@ async function processUpdateV2(contactId) {
         showElem("map-container");
         showMyContacts();
     });
-}
-
-function updateContactRequest(contactJson, contactId) {
-    // console.log("In updateContactRequest. . .");
-    var xmlhttp = new XMLHttpRequest();
-    var url = "http://localhost:3000/adviz/contacts/" + contactId;
-
-    xmlhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 204) {
-            var result = this.responseText;
-            if (result.length != 0) {
-                console.log("http request result is not 0.")
-            } else {
-                console.log(result)
-                console.log("update user success, id: " + result)
-            }
-        } else if (this.readyState == 4 && this.status == 404) {
-            alert("Contact Id not found")
-        }
-
-    };
-    xmlhttp.open("PUT", url, true);
-    xmlhttp.setRequestHeader("Content-type", "application/json");
-    xmlhttp.send(contactJson);
-}
-
-function deleteContactRequest(contactId) {
-    // console.log("In deleteContactRequest. . .");
-    var xmlhttp = new XMLHttpRequest();
-    var url = "http://localhost:3000/adviz/contacts/" + contactId;
-
-    xmlhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 204) {
-            var result = this.responseText;
-            if (result.length != 0) {
-                console.log("http request result is not 0.")
-            } else {
-                console.log("delete user success, id: " + result)
-            }
-        } else if (this.readyState == 4 && this.status == 404) {
-            alert("Contact Id not found")
-        }
-
-    };
-
-    xmlhttp.open("DELETE", url, true);
-    xmlhttp.send();
 }
 

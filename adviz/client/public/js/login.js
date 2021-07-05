@@ -8,6 +8,8 @@ var isAdmin = false;
 function adminaLoginSetup() {
     // console.log("In AdminaLoginSetup. . .");
     isAdmin = true;
+    deleteDropdown();
+    createDrowndown();
     setHTML('welcome', 'Hi Admina :)');
     document.getElementById("owner").disabled = false;
     fillDropDownWithUsernames();
@@ -30,10 +32,7 @@ function normaloLoginSetup(userName) {
 }
 
 async function fillDropDownWithUsernames() {
-    console.log("In fillDropDownWithUsernames. . .");
-
-    deleteDropdown();
-    createDrowndown();
+    // console.log("In fillDropDownWithUsernames. . .");
 
     let select = document.getElementById("owner");
     
@@ -82,44 +81,44 @@ function logout() {
     pass = "";
 }
 
-var jsonData = []
+// var jsonData = []
 
 // make address request
-function requestGeoJsonAndSetMap(street, num, city, zip, name) {
-    // console.log("In requestGeoJsonAndSetMap. . .");
-    // Clean input
-    street = street.trim();
-    num = num.toString().trim();
-    city = city.trim();
-    zip = zip.toString().trim();
+// function requestGeoJsonAndSetMap(street, num, city, zip, name) {
+//     // console.log("In requestGeoJsonAndSetMap. . .");
+//     // Clean input
+//     street = street.trim();
+//     num = num.toString().trim();
+//     city = city.trim();
+//     zip = zip.toString().trim();
 
-    mapStreet = street + " " + num;
+//     mapStreet = street + " " + num;
 
-    street = street.replace(/\s/g, '+') + "+";
-    num = num.replace(/\s/g, '+') + "+";
-    city = city.replace(/\s/g, '+') + "+";
-    zip = zip.replace(/\s/g, '+');
+//     street = street.replace(/\s/g, '+') + "+";
+//     num = num.replace(/\s/g, '+') + "+";
+//     city = city.replace(/\s/g, '+') + "+";
+//     zip = zip.replace(/\s/g, '+');
 
-    var xmlhttp = new XMLHttpRequest();
-    // example: https://nominatim.openstreetmap.org/search?q=Torstra%C3%9Fe+100+Berlin+10119&format=json
-    var url = "https://nominatim.openstreetmap.org/search?q=" + street + num + city + zip + "&format=json";
+//     var xmlhttp = new XMLHttpRequest();
+//     // example: https://nominatim.openstreetmap.org/search?q=Torstra%C3%9Fe+100+Berlin+10119&format=json
+//     var url = "https://nominatim.openstreetmap.org/search?q=" + street + num + city + zip + "&format=json";
 
-    xmlhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            var geoResult = JSON.parse(this.responseText);
-            if (geoResult.length == 0) {
-                alert("Invalid address, please try again")
-            } else {
-                // console.log(geoResult)
-                jsonData = extractData(geoResult);
-                setMapMarker(jsonData[0], jsonData[1], name, mapStreet)
-            }
-        }
-    };
-    xmlhttp.open("GET", url, true);
-    xmlhttp.send();
+//     xmlhttp.onreadystatechange = function () {
+//         if (this.readyState == 4 && this.status == 200) {
+//             var geoResult = JSON.parse(this.responseText);
+//             if (geoResult.length == 0) {
+//                 alert("Invalid address, please try again")
+//             } else {
+//                 // console.log(geoResult)
+//                 jsonData = extractLatLon(geoResult);
+//                 setMapMarker(jsonData[0], jsonData[1], name, mapStreet)
+//             }
+//         }
+//     };
+//     xmlhttp.open("GET", url, true);
+//     xmlhttp.send();
 
-}
+// }
 
 // make address request
 /* function deleteGeoJsonAndSetMap(street, num, city, zip, name) {
@@ -157,50 +156,8 @@ function requestGeoJsonAndSetMap(street, num, city, zip, name) {
 } */
 
 
-// Get relevant data from json array
-function extractData(jsonData) {
-    // console.log("In extractData. . .");
-    var latitude = jsonData[0]["lat"];
-    var longitude = jsonData[0]["lon"];
 
-    return [latitude, longitude];
-}
 
-//////////////////////////////////////////
-// Map markers
-//////////////////////////////////////////
-
-// using full name as key, see below
-var mapMarkerMap = new Map();
-
-function deleteMapMarker(fullName) {
-    // console.log("In deleteMapMarker. . .");
-    map.removeLayer(mapMarkerMap.get(fullName));
-}
-
-function setMapMarker(lat, lon, name, street) {
-    // console.log("In setMapMarker. . .");
-    var marker = L.marker([lat, lon]).addTo(map);
-    marker.bindPopup("<b>" + name + " </b><br>" + street).openPopup();
-    mapMarkerMap.set(name, marker);
-}
-
-function setInitialMapMarkers() {
-    // console.log("In setInitialMapMarkers. . .");
-    var contacts = getAllUserContactsAsList(user);
-
-    // console.log("contacts in setInitialMapMarkers: ", contacts);
-
-    for (var i = 0; i < contacts.length; i++) {
-        // console.log("init marker, contact[i]", contacts[i]);
-        var adr = contacts[i]["adresse"];
-        var num = String(contacts[i]["hausnummer"]);
-        var cit = contacts[i]["stadt"];
-        var zip = String(contacts[i]["plz"]);
-
-        requestGeoJsonAndSetMap(adr, num, cit, zip, contacts[i]["firstname"] + " " + contacts[i]["lastname"]);
-    }
-}
 
 ///////////////////////////////////////////////////////////////////7
 
