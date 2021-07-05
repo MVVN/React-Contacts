@@ -15,43 +15,10 @@ map.addLayer(layer);
 let markerGroup = L.markerClusterGroup();
 map.addLayer(markerGroup);
 
-// layer.addTo(map);
 
 //////////////////////////////////////////
 // Map markers
 //////////////////////////////////////////
-
-// using full name as key, see below
-/* var mapMarkerMap = new Map();
-
-function deleteMapMarker(fullName) {
-    // console.log("In deleteMapMarker. . .");
-    map.removeLayer(mapMarkerMap.get(fullName));
-}
-
-function setMapMarker(lat, lon, name, street) {
-    // console.log("In setMapMarker. . .");
-    var marker = L.marker([lat, lon]).addTo(map);
-    marker.bindPopup("<b>" + name + " </b><br>" + street).openPopup();
-    mapMarkerMap.set(name, marker);
-}
-
-function setInitialMapMarkers() {
-    // console.log("In setInitialMapMarkers. . .");
-    var contacts = getAllUserContactsAsList(user);
-
-    // console.log("contacts in setInitialMapMarkers: ", contacts);
-
-    for (var i = 0; i < contacts.length; i++) {
-        // console.log("init marker, contact[i]", contacts[i]);
-        var adr = contacts[i]["adresse"];
-        var num = String(contacts[i]["hausnummer"]);
-        var cit = contacts[i]["stadt"];
-        var zip = String(contacts[i]["plz"]);
-
-        requestGeoJsonAndSetMap(adr, num, cit, zip, contacts[i]["firstname"] + " " + contacts[i]["lastname"]);
-    }
-} */
 
 function setAllMapMarker(data) {
     // console.log("In setAllMapMarker. . .");
@@ -78,7 +45,6 @@ function setMapMarkerForNonAdmin(data) {
     marker.bindPopup("<b>" + fullname + " </b><br>" + address).openPopup();
     markerGroup.addLayer(marker);
 }
-
 
 ////////////////////////
 //    GEO DATA ETC.   //

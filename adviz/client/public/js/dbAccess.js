@@ -1,45 +1,6 @@
 let allUser = new Map();
 let activeUserName;
 
-async function testV2() {
-    getGeoData("Teutonenstr", "32a", "Berlin", "12524");
-}
-
-// access DB and save every user in allUser<username, userObject>
-/* function getAllUserRequest() {
-    let xmlhttp = new XMLHttpRequest();
-    let url = "http://localhost:3000/adviz/all";
-
-    xmlhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            let serverAnswer = JSON.parse(this.responseText);
-            if (serverAnswer.length == 0) {
-                console.log("In getAllUser: http request answer length is 0.")
-            } else {
-                for (let id of Object.keys(serverAnswer)) {
-                    let theUsername = serverAnswer[id].username;
-                    let theUserAsObject = serverAnswer[id];
-                    allUser.set(theUsername, theUserAsObject);
-                }
-            }
-        }
-    };
-    xmlhttp.open("GET", url, true);
-    xmlhttp.send();
-} */
-
-// access DB and save every user in allUser<username, userObject>
-/* function getAllUserRequestV2() {
-    axios.get("http://localhost:3000/adviz/all")
-        .then(response => {
-            for (let i = 0; i < response.data.length; i++) {
-                let theUsername = response.data[i].username;
-                let theUserAsObject = response.data[i];
-                allUser.set(theUsername, theUserAsObject);
-            }
-        })
-        .catch(err => { console.log(err, err.response) });
-} */
 
 // access DB and save every user in allUser<username, userObject>
 async function getAllUserRequestV3() {
@@ -63,31 +24,6 @@ function loginRequestV2(loginDataJson) {
 
                 loginSetup(serverAnswer);
 
-                /*  if (serverAnswer["user"]["isAdmin"] == true) {
- 
-                     //getContactsHttpRequest(result["user"]["username"], result["user"]["_id"])
-                     uId = serverAnswer["user"]["_id"];
- 
-                     refreshContacts()
- 
-                     //alert("Admina")
-                     hideElem('login')
-                     showElem('map-container')
- 
-                     adminaLoginSetup()
- 
-                 } else {
-                     //getContactsHttpRequest(result["user"]["username"], result["user"]["_id"])
-                     uId = serverAnswer["user"]["_id"];
- 
-                     refreshContacts()
- 
-                     //alert("Normalo")
-                     hideElem('login')
-                     showElem('map-container')
- 
-                     normaloLoginSetup(serverAnswer["user"]["username"])
-                 } */
             }
         } else if (this.readyState == 4 && this.status == 401) {
             alert("Wrong Login/Pass");
