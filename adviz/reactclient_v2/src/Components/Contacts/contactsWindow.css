@@ -1,0 +1,33 @@
+.contactsWindow {
+    position: absolute;
+    left: 2vw;
+    top: 2vh;
+    background-color: rgba(54, 54, 54, 0.85);
+    width: 25vw;
+    height: 80vh;
+    border-radius: 20px;
+}
+
+.contactsWindow-header {
+    width: auto;
+    text-align: center;
+    padding: 10px;
+    margin-top: 3%; 
+    margin-bottom: 3%;
+    border-bottom: 2px solid rgb(185, 236, 90);
+}
+
+.contactsWindow-btn {
+    color: rgb(214, 221, 196);
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.contactsWindow-btn:hover {
+    color: rgba(185, 236, 90);
+    cursor: pointer;
+}
+
+.contactsWindow-contacts {
+    overflow-y: scroll;
+}
