@@ -4,7 +4,7 @@ import axios from "axios"
 
 import "./Login.css";
 
-export default function Login({ setShowLogin, setCurrentUser, setCurrentUserID, setViewport}) {
+export default function Login({ setShowLogin, setCurrentUser, setCurrentUserID, setViewport, setIsAdmin}) {
 
     const usernameRef = useRef();
     const passwordRef = useRef();
@@ -19,6 +19,7 @@ export default function Login({ setShowLogin, setCurrentUser, setCurrentUserID, 
             const response = await axios.post("/login", user);
             setCurrentUser(response.data.user.username);
             setCurrentUserID(response.data.user._id);
+            setIsAdmin(response.data.user.isAdmin);
             // console.log("response", response);
             localStorage.setItem("user", response.data.user.username);
             localStorage.setItem("userid", response.data.user._id);

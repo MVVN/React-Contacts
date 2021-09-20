@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react'
 import axios from "axios";
 
 import "./mycontact.css";
-import { SmsOutlined } from '@material-ui/icons';
 
-export default function MyContact({ contact, editable }) {
+export default function MyContact({ contact, editable, displayWindow, setContactToUpdate }) {
 
     const editContact = () => {
         if (editable) {
-            console.log(`Contact editable`, contact);
+            // console.log(`Contact editable`, contact);
+            setContactToUpdate(contact);
+            displayWindow("update");
         }
     }
 

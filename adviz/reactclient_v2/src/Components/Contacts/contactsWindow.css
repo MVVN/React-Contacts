@@ -31,3 +31,9 @@
 .contactsWindow-contacts {
     overflow-y: scroll;
 }
+
+.addUpdateWindow-header {
+    color: rgb(214, 221, 196);
+    margin-left: 10%;
+    margin-right: 10%;
+}
