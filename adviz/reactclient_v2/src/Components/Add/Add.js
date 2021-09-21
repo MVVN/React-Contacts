@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 
 import { AddCircleOutline } from '@material-ui/icons';
+import axios from 'axios';
 
 import "../Contacts/contactsWindow.css";
 
-export default function Add({ isAdmin, displayWindow, currentUser, currentUserID, allUser }) {
-    
+export default function Add({ isAdmin, displayWindow, currentUser, currentUserID, allUser, setViewport }) {
+
     const [vorname, setVorname] = useState(null);
     const [nachname, setNachname] = useState(null);
     const [straße, setStraße] = useState(null);
@@ -17,23 +18,96 @@ export default function Add({ isAdmin, displayWindow, currentUser, currentUserID
     const [privat, setPrivat] = useState(true);
     const [owner, setOwner] = useState(currentUserID);
 
-
-    const postAddData = () => {
+    const handleSubmit = async (e) => {
         // post Data from Add Form
-        console.log(`PostData`, vorname + nachname + straße + hausnummer + plz + stadt + bundesland + land + privat + owner)
-        console.log(`owner`, owner)
+        e.preventDefault();
+
+        if (!vorname || !nachname || !straße || !hausnummer || !plz || !stadt) {
+            alert("Please fill in all required data.");
+        } else {
+            let geoData = await getGeoData(straße, hausnummer, stadt, plz);
+            if (geoData) {
+                postNewContact(geoData);
+            } else {
+                alert("Couldn't find address.")
+            }
+        }
         closeAddWindow();
     }
 
-
     const closeAddWindow = () => {
-        // clearForm();
         displayWindow("contact");
     }
 
-/*     const clearForm = () => {
-        // clear Form Data before closing add Window
-    } */
+    const getGeoData = async (straße, hausnummer, stadt, plz) => {
+        setStraße(straße.trim());
+        setHausnummer(hausnummer.toString().trim());
+        setStadt(stadt.trim());
+        setPlz(plz.toString().trim());
+
+        let mapStreet = straße + " " + hausnummer;
+
+        // setStraße(straße.replace(/\s/g, '+') + "+");
+        // setHausnummer(hausnummer.replace(/\s/g, '+') + "+");
+        // setStadt(stadt.replace(/\s/g, '+') + "+");
+        // setPlz(plz.replace(/\s/g, '+'));
+
+        // example: https://nominatim.openstreetmap.org/search?q=Torstra%C3%9Fe+100+Berlin+10119&format=json
+        // let url = "https://nominatim.openstreetmap.org/search?q=" + straße + hausnummer + stadt + plz + "&format=json";
+        let url = `https://nominatim.openstreetmap.org/search.php?q=${straße}+${hausnummer}+${plz}+${stadt}&format=jsonv2`
+
+        let data;
+
+        try {
+            data = await axios.get(url);
+        } catch (err) {
+            console.log(`err`, err);
+        }
+
+        let geoData = data.data;
+        let json;
+
+        if (geoData[0].lat && geoData[0].lon) {
+            json = {
+                "lat": geoData[0].lat,
+                "lon": geoData[0].lon
+            }
+        }
+        console.log(`JSON`, json)
+        return json;
+    }
+
+    const postNewContact = async (geoData) => {
+        let newContact = createContactJSON(geoData);
+        console.log(`newContact`, newContact)
+        await axios.post("http://localhost:3000/adviz/contacts/", newContact);
+        setViewport({
+            width: "100vw",
+            height: "100vh",
+            latitude: Number(geoData.lat),
+            longitude: Number(geoData.lon),
+            zoom: 11
+        });
+    }
+
+    const createContactJSON = (geoData) => {
+        console.log(`geoDataInJSON`, geoData)
+        let newContact = {
+            "vorname": vorname,
+            "nachname": nachname,
+            "adresse": straße,
+            "hausnummer": hausnummer,
+            "plz": plz,
+            "stadt": stadt,
+            "fedState": bundesland,
+            "land": land,
+            "privat": privat,
+            "owner": owner,
+            "lat": geoData.lat,
+            "lon": geoData.lon
+        }
+        return newContact;
+    }
 
     return (
         <div className="contactsWindow">
@@ -44,32 +118,41 @@ export default function Add({ isAdmin, displayWindow, currentUser, currentUserID
                 <form>
                     <label>Vorname: </label>
                     <input required placeholder="required" onChange={(e) => setVorname(e.target.value)} />
+                    <br></br>
                     <label>Nachname: </label>
                     <input required placeholder="required" onChange={(e) => setNachname(e.target.value)} />
+                    <br></br>
                     <label>Straße: </label>
                     <input required placeholder="required" onChange={(e) => setStraße(e.target.value)} />
+                    <br></br>
                     <label>Hausnummer: </label>
                     <input required placeholder="required" onChange={(e) => setHausnummer(e.target.value)} />
+                    <br></br>
                     <label>PLZ: </label>
                     <input required placeholder="required" onChange={(e) => setPlz(e.target.value)} />
+                    <br></br>
                     <label>Stadt: </label>
                     <input required placeholder="required" onChange={(e) => setStadt(e.target.value)} />
+                    <br></br>
                     <label>Bundesland: </label>
                     <input onChange={(e) => setBundesland(e.target.value)} />
+                    <br></br>
                     <label>Land: </label>
-                    <input  onChange={(e) => setLand(e.target.value)} />
+                    <input onChange={(e) => setLand(e.target.value)} />
+                    <br></br>
                     <label>Privat: </label>
                     <input type="checkbox" checked={privat} onChange={(e) => setPrivat(!privat)} />
+                    <br></br>
                     {isAdmin && (
                         <>
                             <label>Owner: </label>
                             <select onChange={(e) => setOwner(e.target.value)} >
-                                <option value={currentUserID} selected>{currentUser}</option>
+                                <option key={currentUserID} value={currentUserID}>{currentUser}</option>
                                 <>
                                     {
                                         allUser.map((user) => {
-                                            if (user.username != currentUser) {
-                                                return <option value={user._id}>{user.username}</option>
+                                            if (user.username !== currentUser) {
+                                                return <option key={user._id} value={user._id}>{user.username}</option>
                                             }
                                         })
                                     }
@@ -77,8 +160,10 @@ export default function Add({ isAdmin, displayWindow, currentUser, currentUserID
                             </select>
                         </>
                     )}
-                    <button className="add-btn" onClick={postAddData} type="submit" >Add</button>
-                    <button className="add-btn add-back-btn" onClick={closeAddWindow} >Back</button>
+                    <br></br>
+                    <button className="add-btn" onClick={handleSubmit} type="submit" >Add</button>
+                    <br></br>
+                    <button className="add-btn add-back-btn" onClick={closeAddWindow} type="button">Back</button>
                 </form>
             </div>
         </div>

@@ -37,3 +37,107 @@
     margin-left: 10%;
     margin-right: 10%;
 }
+
+/* .addWindow-form label {
+    float: left;
+    font-weight: 400;
+    font-size: large;
+    color: rgba(185, 236, 90);
+}
+
+.addWindow-form input {
+    float: right;
+    font-weight: 400;
+    font-size: large;
+    color: rgba(185, 236, 90);
+} */
+
+input {
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    /* line-height: 5%; */
+    margin:  5px 10% 5px 10%;
+    display: inline-block;
+}
+
+label{
+    padding-left: 2%;
+    font-weight: 200;
+    font-size: large;
+    color: rgb(214, 221, 202);
+    /* position: relative; */
+    display: inline-block;
+    width: auto;
+    text-align: left;
+}
+
+.addWindow-form button{   
+    border: none;
+    /* padding: 15px 30px; */
+    width: 50%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-size: large;
+    border-radius: 6px;
+    color: white;
+    margin-top: 5%;
+    margin-left: 10%;
+}
+
+.add-btn {
+    background-color: rgb(38, 189, 216);
+}
+.add-back-btn {
+    background-color: rgb(194, 84, 41);
+}
+
+.add-btn:hover{    
+    cursor:pointer;
+    background-color: rgb(38, 165, 187);
+ } 
+ 
+.add-back-btn:hover {
+    cursor:pointer;
+    background-color: rgb(165, 67, 29);
+}
+
+
+.updateWindow-form button{   
+    border: none;
+    /* padding: 15px 30px; */
+    width: 50%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-size: large;
+    border-radius: 6px;
+    color: white;
+    margin-top: 5%;
+    margin-left: 10%;
+}
+
+.upd-btn {
+    background-color: rgb(38, 189, 216);
+}
+.upd-back-btn {
+    background-color: rgb(194, 84, 41);
+}
+
+.upd-btn:hover{    
+    cursor:pointer;
+    background-color: rgb(38, 165, 187);
+ } 
+ 
+.upd-back-btn:hover {
+    cursor:pointer;
+    background-color: rgb(165, 67, 29);
+}
+
+.upd-del-btn {
+    background-color: rgb(197, 35, 30);
+}
+ 
+.upd-del-btn:hover {
+    cursor:pointer;
+    background-color: rgb(151, 24, 19);
+}

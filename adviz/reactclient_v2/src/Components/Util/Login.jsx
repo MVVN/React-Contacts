@@ -23,6 +23,7 @@ export default function Login({ setShowLogin, setCurrentUser, setCurrentUserID, 
             // console.log("response", response);
             localStorage.setItem("user", response.data.user.username);
             localStorage.setItem("userid", response.data.user._id);
+            localStorage.setItem("isadmin", response.data.user.isAdmin);
             setShowLogin(false);
             setViewport({
                 width: "100vw",

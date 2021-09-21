@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import { Group, Person, AddCircleOutline } from '@material-ui/icons';
 
@@ -9,7 +9,7 @@ import Add from "../Add/Add";
 import Update from "../Update/Update";
 
 
-export default function ContactsWindow({ currentUser, allContacts, setAllContacts, currentUserID, isAdmin, allUser }) {
+export default function ContactsWindow({ currentUser, allContacts, setAllContacts, currentUserID, isAdmin, allUser, setViewport }) {
 
     const [userContacts, setUserContacts] = useState([]);
     const [showAllUserContacts, setShowAllUserContacts] = useState([false]);
@@ -58,18 +58,18 @@ export default function ContactsWindow({ currentUser, allContacts, setAllContact
     }
 
     const displayWindow = (windowName) => {
-        setShowContactWindow(windowName == "contact");
-        setShowAddWindow(windowName == "add");
-        setShowUpdateWindow(windowName == "update");
+        setShowContactWindow(windowName === "contact");
+        setShowAddWindow(windowName === "add");
+        setShowUpdateWindow(windowName === "update");
     }
 
     return (
         <>
             {showAddWindow && (
-                <Add isAdmin={isAdmin} displayWindow={displayWindow} currentUser={currentUser} currentUserID={currentUserID} allUser={allUser} />
+                <Add isAdmin={isAdmin} displayWindow={displayWindow} currentUser={currentUser} currentUserID={currentUserID} allUser={allUser} setViewport={setViewport} />
             )}
             {showUpdateWindow && (
-                <Update isAdmin={isAdmin} displayWindow={displayWindow} currentUser={currentUser} currentUserID={currentUserID} allUser={allUser} contactToUpdate={contactToUpdate} />
+                <Update isAdmin={isAdmin} displayWindow={displayWindow} currentUser={currentUser} currentUserID={currentUserID} allUser={allUser} contactToUpdate={contactToUpdate} setViewport={setViewport} />
             )}
 
             {showContactWindow && (
@@ -84,8 +84,8 @@ export default function ContactsWindow({ currentUser, allContacts, setAllContact
                             <>
                                 {allContacts.map((contact) => {
                                     // console.log("allContacts contact: ",contact);
-                                    if (contact.owner == currentUserID || !contact.privat || isAdmin) {
-                                        return <MyContact key={contact._id} contact={contact} editable={currentUserID == contact.owner || isAdmin} displayWindow={displayWindow} setContactToUpdate={setContactToUpdate} />
+                                    if (contact.owner === currentUserID || !contact.privat || isAdmin) {
+                                        return <MyContact key={contact._id} contact={contact} editable={currentUserID === contact.owner || isAdmin} displayWindow={displayWindow} setContactToUpdate={setContactToUpdate} setViewport={setViewport} />
                                     }
                                 })}
 
@@ -95,7 +95,7 @@ export default function ContactsWindow({ currentUser, allContacts, setAllContact
                                 <div>
                                     {userContacts.map((contact) => {
                                         // console.log("userContacts contact:",contact);
-                                        return <MyContact contact={contact} editable={true} displayWindow={displayWindow} setContactToUpdate={setContactToUpdate} />
+                                        return <MyContact key={contact._id} contact={contact} editable={true} displayWindow={displayWindow} setContactToUpdate={setContactToUpdate} setViewport={setViewport} />
                                     })}
                                 </div>
                             </>

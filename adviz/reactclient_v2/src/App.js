@@ -13,9 +13,9 @@ function App() {
   const [allContacts, setAllContacts] = useState([]);
   const [allUser, setAllUser] = useState([]);
   const [currentUser, setCurrentUser] = useState(localStorage.getItem("user"));
-  const [currentUserID, setCurrentUserID] = useState(null);
+  const [currentUserID, setCurrentUserID] = useState(localStorage.getItem("userid"));
   const [showLogin, setShowLogin] = useState(false);
-  const [isAdmin, setIsAdmin] = useState();
+  const [isAdmin, setIsAdmin] = useState(localStorage.getItem("isadmin"));
 
   const [viewport, setViewport] = useState({
     width: "100vw",
@@ -77,7 +77,7 @@ function App() {
           (
             <>
               <button className="button logout" onClick={handleLogout}>Logout</button>
-              <ContactsWindow currentUser={currentUser} currentUserID={currentUserID} allContacts={allContacts} setAllContacts={setAllContacts} isAdmin={isAdmin} allUser={allUser} />
+              <ContactsWindow currentUser={currentUser} currentUserID={currentUserID} allContacts={allContacts} setAllContacts={setAllContacts} isAdmin={isAdmin} allUser={allUser} setViewport={setViewport} />
             </>
           ) : (
             <button className="button login" onClick={handleLogin}>Login</button>
