@@ -45,8 +45,6 @@ export default function Add({ isAdmin, displayWindow, currentUser, currentUserID
         setStadt(stadt.trim());
         setPlz(plz.toString().trim());
 
-        let mapStreet = straße + " " + hausnummer;
-
         // setStraße(straße.replace(/\s/g, '+') + "+");
         // setHausnummer(hausnummer.replace(/\s/g, '+') + "+");
         // setStadt(stadt.replace(/\s/g, '+') + "+");
@@ -73,13 +71,13 @@ export default function Add({ isAdmin, displayWindow, currentUser, currentUserID
                 "lon": geoData[0].lon
             }
         }
-        console.log(`JSON`, json)
+        // console.log(`JSON`, json);
         return json;
     }
 
     const postNewContact = async (geoData) => {
         let newContact = createContactJSON(geoData);
-        console.log(`newContact`, newContact)
+        // console.log(`newContact`, newContact);
         await axios.post("http://localhost:3000/adviz/contacts/", newContact);
         setViewport({
             width: "100vw",
@@ -91,7 +89,7 @@ export default function Add({ isAdmin, displayWindow, currentUser, currentUserID
     }
 
     const createContactJSON = (geoData) => {
-        console.log(`geoDataInJSON`, geoData)
+        // console.log(`geoDataInJSON`, geoData);
         let newContact = {
             "vorname": vorname,
             "nachname": nachname,

@@ -29,7 +29,13 @@
 }
 
 .contactsWindow-contacts {
-    overflow-y: scroll;
+    overflow-y:scroll;
+    max-height: 70%;
+    display: flex;
+}
+
+.mycontact {
+    text-align: center;
 }
 
 .addUpdateWindow-header {

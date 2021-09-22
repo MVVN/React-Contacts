@@ -9,7 +9,7 @@ import Add from "../Add/Add";
 import Update from "../Update/Update";
 
 
-export default function ContactsWindow({ currentUser, allContacts, setAllContacts, currentUserID, isAdmin, allUser, setViewport }) {
+export default function ContactsWindow({ currentUser, allContacts, setAllContacts, currentUserID, isAdmin, allUser, setViewport, setContactsToRender, setIsAdmin }) {
 
     const [userContacts, setUserContacts] = useState([]);
     const [showAllUserContacts, setShowAllUserContacts] = useState([false]);
@@ -19,14 +19,15 @@ export default function ContactsWindow({ currentUser, allContacts, setAllContact
     const [contactToUpdate, setContactToUpdate] = useState();
 
     const showAllContacts = () => {
-        console.log("in showAllContacts");
+        // console.log("in showAllContacts");
         setUserContacts([]);
         const getAllContacts = async () => {
             setAllContacts([]);
-            setAllContacts([]);
+            setContactsToRender([]);
             try {
                 const response = await axios.get("/contacts/all");
                 setAllContacts(response.data);
+                setContactsToRender(response.data);
             } catch (err) {
                 console.log(err);
             }
@@ -36,12 +37,14 @@ export default function ContactsWindow({ currentUser, allContacts, setAllContact
     }
 
     const showMyContacts = () => {
-        console.log("in showMyContacts");
+        // console.log("in showMyContacts");
         const getUserContacts = async () => {
             setUserContacts([]);
+            setContactsToRender([]);
             try {
                 const response = await axios.get("/contacts?userId=" + currentUserID);
                 setUserContacts(response.data);
+                setContactsToRender(response.data);
             } catch (err) {
                 console.log(err);
             }
@@ -81,21 +84,20 @@ export default function ContactsWindow({ currentUser, allContacts, setAllContact
                     </div>
                     <div className="contactsWindow-contacts">
                         {showAllUserContacts ? (
-                            <>
+                            <div className="mycontacts-wrapper">
                                 {allContacts.map((contact) => {
                                     // console.log("allContacts contact: ",contact);
                                     if (contact.owner === currentUserID || !contact.privat || isAdmin) {
-                                        return <MyContact key={contact._id} contact={contact} editable={currentUserID === contact.owner || isAdmin} displayWindow={displayWindow} setContactToUpdate={setContactToUpdate} setViewport={setViewport} />
+                                        return <MyContact className="mycontact" key={contact._id} contact={contact} editable={currentUserID === contact.owner || isAdmin} displayWindow={displayWindow} setContactToUpdate={setContactToUpdate} setViewport={setViewport} />
                                     }
                                 })}
-
-                            </>
+                            </div>
                         ) : (
                             <>
-                                <div>
+                                <div className="mycontacts-wrapper">
                                     {userContacts.map((contact) => {
                                         // console.log("userContacts contact:",contact);
-                                        return <MyContact key={contact._id} contact={contact} editable={true} displayWindow={displayWindow} setContactToUpdate={setContactToUpdate} setViewport={setViewport} />
+                                        return <MyContact className="mycontact" key={contact._id} contact={contact} editable={true} displayWindow={displayWindow} setContactToUpdate={setContactToUpdate} setViewport={setViewport} />
                                     })}
                                 </div>
                             </>
