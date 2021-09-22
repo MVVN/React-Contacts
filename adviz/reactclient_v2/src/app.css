@@ -1,0 +1,34 @@
+.button {
+    border: none;
+    padding: 15px 30px;
+    font-size: large;
+    border-radius: 6px;
+    color: white;
+    position: absolute;
+}
+
+.button:hover {
+    cursor:pointer;
+}
+
+.login{
+    background-color: rgb(38, 189, 216);
+    top: 10px;
+    right: 40px;
+}
+
+.logout {
+    background-color: rgb(245, 94, 67);
+    top: 10px;
+    right: 40px;
+}
+
+.login:hover{    
+    cursor:pointer;
+    background-color: rgb(38, 165, 187);
+}
+
+.logout:hover {
+    cursor:pointer;   
+    background-color: rgb(212, 83, 60);
+}
