@@ -29,7 +29,8 @@ export default function Update({ isAdmin, displayWindow, currentUser, currentUse
             if (geoData) {
                 updateContact(geoData);
             } else {
-                alert("Couldn't find address.")
+                // commented out because it caused  double error message
+                // alert("Couldn't find address.");
             }
         }
         closeUpdateWindow();
@@ -64,23 +65,30 @@ export default function Update({ isAdmin, displayWindow, currentUser, currentUse
             console.log(`err`, err);
         }
 
-        let geoData = data.data;
-        let json;
-
-        if (geoData[0].lat && geoData[0].lon) {
-            json = {
-                "lat": geoData[0].lat,
-                "lon": geoData[0].lon
+        if(data.data.length == 0) {
+            alert("Address not found.");
+            return;
+        } else {
+            let geoData = data.data;
+            let json;
+    
+            if (geoData[0].lat != undefined && geoData[0].lon != undefined) {
+                if (geoData[0].lat && geoData[0].lon) {
+                    json = {
+                        "lat": geoData[0].lat,
+                        "lon": geoData[0].lon
+                    }
+                }
             }
-        }
-        // console.log(`JSON`, json);
-        return json;
+            // console.log(`JSON`, json);
+            return json;
+        }        
     }
 
     const updateContact = async (geoData) => {
         let updatedContact = createContactJSON(geoData);
         // console.log(`updatedContact`, updatedContact)
-        await axios.put("http://localhost:3000/adviz/contacts/"+ contactToUpdate._id, updatedContact);
+        await axios.put("http://localhost:3000/adviz/contacts/" + contactToUpdate._id, updatedContact);
         setViewport({
             width: "100vw",
             height: "100vh",
@@ -146,7 +154,7 @@ export default function Update({ isAdmin, displayWindow, currentUser, currentUse
                     <input onChange={(e) => setLand(e.target.value)} value={land}></input>
                     <br></br>
                     <label>Privat: </label>
-                    <input type="checkbox" checked={privat} onChange={(e) => setPrivat(!privat)} value={privat} />
+                    <input type="checkbox" checked={privat} onChange={() => setPrivat(!privat)} value={privat} />
                     <br></br>
                     {isAdmin && (
                         <>

@@ -29,7 +29,8 @@ export default function Add({ isAdmin, displayWindow, currentUser, currentUserID
             if (geoData) {
                 postNewContact(geoData);
             } else {
-                alert("Couldn't find address.")
+                // commented out because it caused  double error message
+                // alert("Couldn't find address.");
             }
         }
         closeAddWindow();
@@ -62,17 +63,22 @@ export default function Add({ isAdmin, displayWindow, currentUser, currentUserID
             console.log(`err`, err);
         }
 
-        let geoData = data.data;
-        let json;
+        if (data.data.length == 0) {
+            alert("Address not found.");
+            return;
+        } else {
+            let geoData = data.data;
+            let json;
 
-        if (geoData[0].lat && geoData[0].lon) {
-            json = {
-                "lat": geoData[0].lat,
-                "lon": geoData[0].lon
+            if (geoData[0].lat && geoData[0].lon) {
+                json = {
+                    "lat": geoData[0].lat,
+                    "lon": geoData[0].lon
+                }
             }
+            // console.log(`JSON`, json);
+            return json;
         }
-        // console.log(`JSON`, json);
-        return json;
     }
 
     const postNewContact = async (geoData) => {
