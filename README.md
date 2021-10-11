@@ -1,4 +1,4 @@
-# Webentwicklung 2021 - AdViz Beleg
+# Webentwicklung 2021
 
 
-AdViz ist eine Single Page Application, welche es ermöglicht Kontakte auf einer Karte zu speichern.
+Single Page Application, welche es ermöglicht Kontakte auf einer Karte zu speichern.
